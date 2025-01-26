@@ -53,7 +53,7 @@ export default async function Home() {
         {session?.user ? (
           <div className="text-center sm:text-left">
             <h1 className="text-2xl font-bold mb-2">Welcome back, {session.user.name}!</h1>
-            <p className="text-gray-600 dark:text-gray-400">You're signed in with {session.user.email}</p>
+            <p className="text-gray-600 dark:text-gray-400">{"You're signed in with" + session.user.email}</p>
           </div>
         ) : (
           <div className="text-center sm:text-left">
