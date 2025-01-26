@@ -1,17 +1,67 @@
+import { auth, signOut } from "@/auth";
 import Image from "next/image";
+import Link from "next/link";
 
-export default function Home() {
+export default async function Home() {
+  const session = await auth();
+
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
       <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
+        <div className="flex items-center justify-between w-full">
+          <Image
+            className="dark:invert"
+            src="/next.svg"
+            alt="Next.js logo"
+            width={180}
+            height={38}
+            priority
+          />
+          
+          {session?.user ? (
+            <div className="flex items-center gap-4">
+              <Link
+                href="/app"
+                className="rounded-full bg-foreground text-background px-4 py-2 text-sm hover:bg-opacity-90 transition-colors"
+              >
+                Go to Dashboard
+              </Link>
+              <form
+                action={async () => {
+                  'use server';
+                  await signOut();
+                }}
+              >
+                <button 
+                  type="submit"
+                  className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
+                >
+                  Sign Out
+                </button>
+              </form>
+            </div>
+          ) : (
+            <Link
+              href="/auth/signin"
+              className="rounded-full bg-foreground text-background px-4 py-2 text-sm hover:bg-opacity-90 transition-colors"
+            >
+              Sign In
+            </Link>
+          )}
+        </div>
+
+        {session?.user ? (
+          <div className="text-center sm:text-left">
+            <h1 className="text-2xl font-bold mb-2">Welcome back, {session.user.name}!</h1>
+            <p className="text-gray-600 dark:text-gray-400">You're signed in with {session.user.email}</p>
+          </div>
+        ) : (
+          <div className="text-center sm:text-left">
+            <h1 className="text-2xl font-bold mb-2">Welcome to Next.js</h1>
+            <p className="text-gray-600 dark:text-gray-400">Sign in to access your dashboard</p>
+          </div>
+        )}
+
         <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
           <li className="mb-2">
             Get started by editing{" "}
