@@ -1,15 +1,13 @@
-import { prisma } from '@/lib/prisma';
-
 export default async function WorkoutsPage() {
-  const workouts = await prisma.workout.findMany({
-    include: {
-      exercises: {
-        include: {
-          exercise: true
-        }
-      }
-    }
-  });
+//   const workouts = await prisma.workout.findMany({
+//     include: {
+//       exercises: {
+//         include: {
+//           exercise: true
+//         }
+//       }
+//     }
+//   });
 
   return (
     <div>

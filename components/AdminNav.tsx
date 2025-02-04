@@ -4,7 +4,6 @@ import { Users, Dumbbell, Video, DollarSign, MessageSquare } from "lucide-react"
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Session } from "next-auth";
-import UserAvatar from "./UserAvatar";
 
 interface AdminNavProps {
   session: Session | null;

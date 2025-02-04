@@ -1,16 +1,14 @@
-import { prisma } from '@/lib/prisma';
-
 export default async function ClientsPage() {
-  const clients = await prisma.user.findMany({
-    where: {
-      isAdmin: false,
-    },
-    select: {
-      id: true,
-      name: true,
-      email: true,
-    }
-  });
+//   const clients = await prisma.user.findMany({
+//     where: {
+//       isAdmin: false,
+//     },
+//     select: {
+//       id: true,
+//       name: true,
+//       email: true,
+//     }
+//   });
 
   return (
     <div>

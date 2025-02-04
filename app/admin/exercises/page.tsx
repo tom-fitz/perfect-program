@@ -1,7 +1,5 @@
-import { prisma } from '@/lib/prisma';
-
 export default async function ExercisesPage() {
-  const exercises = await prisma.exercise.findMany();
+//   const exercises = await prisma.exercise.findMany();
 
   return (
     <div>

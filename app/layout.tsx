@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { auth } from "@/auth";
 import NavigationWrapper from "@/components/NavigationWrapper";
 
 const geistSans = Geist({
@@ -23,9 +22,7 @@ export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
-}>) {
-  const session = await auth();
-  
+}>) {  
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
