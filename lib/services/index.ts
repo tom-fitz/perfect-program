@@ -3,6 +3,7 @@ import { redirect } from "next/navigation"
 import { ExerciseService } from './exercises'
 import { WorkoutService } from './workouts'
 import { UserService } from './users'
+import { AdminUserService } from "./admin/users"
 // import { ScheduleService } from './schedule'
 
 async function bootstrapUser() {
@@ -18,7 +19,8 @@ async function bootstrapUser() {
     image: session.user.image ?? null, 
     isAdmin: false,
     emailVerified: null,
-    adminId: null
+    adminId: null,
+    createdAt: new Date()
   })
   return userService.getCurrentUser(session.user.email!)
 }
@@ -27,6 +29,7 @@ interface Services {
   users: UserService;
   workouts: WorkoutService;
   exercises: ExerciseService;
+  adminUsers: AdminUserService;
 }
 
 export async function getServices(): Promise<Services> {
@@ -35,6 +38,7 @@ export async function getServices(): Promise<Services> {
   return {
     users: new UserService(user),
     workouts: new WorkoutService(user),
-    exercises: new ExerciseService(user)
+    exercises: new ExerciseService(user),
+    adminUsers: new AdminUserService(user)
   }
 } 

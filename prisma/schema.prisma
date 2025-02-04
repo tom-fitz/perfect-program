@@ -31,6 +31,7 @@ model User {
   createdWorkouts Workout[] @relation("CreatedWorkouts")
   createdExercises Exercise[]  @relation("CreatedExercises")
   billing       Billing[]
+  createdAt     DateTime   @default(now())
 }
 
 model Account {

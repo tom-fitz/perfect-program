@@ -25,7 +25,7 @@ export default function AdminNav({ session }: AdminNavProps) {
   }
   
   return (
-    <nav className="h-full w-64 flex flex-col py-8 bg-ebony text-powder border-l border-gray-800">
+    <nav className="fixed top-0 left-16 h-screen w-48 flex flex-col py-8 bg-ebony text-powder border-l border-gray-800">
       <div className="flex-1 px-4">
         {adminNavItems.map(({ href, icon: Icon, label }) => {
           const isActive = pathname === href;
@@ -33,12 +33,14 @@ export default function AdminNav({ session }: AdminNavProps) {
             <Link
               key={href}
               href={href}
-              className={`flex items-center gap-3 p-3 rounded-lg transition-colors hover:text-sunglow mb-2 ${
-                isActive ? "text-sunglow bg-black/10" : ""
+              className={`flex items-center gap-3 p-3 rounded-lg transition-colors mb-2 ${
+                isActive 
+                  ? "text-sunglow bg-black/20" 
+                  : "text-powder hover:text-sunglow hover:bg-black/10"
               }`}
             >
               <Icon size={20} />
-              <span>{label}</span>
+              <span className="font-medium">{label}</span>
             </Link>
           );
         })}

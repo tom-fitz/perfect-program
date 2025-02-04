@@ -11,6 +11,9 @@ export default {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+        sunglow: "#FBB424",
+        ebony: "#111827",
+        powder: "#FAFAFA",
       },
     },
   },
