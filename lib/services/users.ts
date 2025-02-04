@@ -1,5 +1,5 @@
 import { BaseService } from "../base-service";
-import { Prisma, User } from "@prisma/client";
+import { User } from "@prisma/client";
 
 export class UserService extends BaseService {
   async getOrCreateUser(data: { 

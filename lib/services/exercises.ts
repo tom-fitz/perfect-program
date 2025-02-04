@@ -1,5 +1,4 @@
 import { BaseService } from "../base-service";
-import { Prisma } from "@prisma/client";
 import { UnauthorizedError } from "@/lib/errors";
 
 export class ExerciseService extends BaseService {
@@ -17,7 +16,6 @@ export class ExerciseService extends BaseService {
   }
 
   async createExercise(data: { name: string; description: string; videoUrl: string }) {
-    console.log("user", this.user);
     if (!this.user?.id) {
       throw new Error('User not authenticated');
     }
