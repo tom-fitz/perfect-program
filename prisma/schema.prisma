@@ -23,7 +23,6 @@ model User {
   isAdmin       Boolean    @default(false)
   accounts      Account[]
   sessions      Session[]
-  // New relations
   clientOf      User?      @relation("AdminClient", fields: [adminId], references: [id])
   adminId       String?
   clients       User[]     @relation("AdminClient")

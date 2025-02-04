@@ -13,7 +13,7 @@ export default async function ProfilePage() {
     redirect('/auth/signin');
   }
 
-  const joinDate = new Date(Date.now()).toLocaleDateString('en-US', {
+  const joinDate = new Date().toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'long',
     day: 'numeric'

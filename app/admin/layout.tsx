@@ -14,10 +14,12 @@ export default async function AdminLayout({
   }
 
   return (
-    <div className="flex h-full">
-      <AdminNavWrapper />
-      <div className="flex-1 p-8">
-        {children}
+    <div className="flex-1">
+      <div className="flex h-full">
+        <AdminNavWrapper />
+        <div className="flex-1 p-8">
+          {children}
+        </div>
       </div>
     </div>
   );
