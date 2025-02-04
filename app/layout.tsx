@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { auth } from "@/auth";
+import NavigationWrapper from "@/components/NavigationWrapper";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -24,15 +25,14 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const session = await auth();
-
-  console.log(session);
   
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        {children}
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        <NavigationWrapper />
+        <div className="ml-16 transition-[margin] duration-200 ease-in-out peer-hover:ml-48">
+          {children}
+        </div>
       </body>
     </html>
   );

@@ -1,0 +1,122 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url = env("POSTGRES_PRISMA_URL") // Uses connection pooling
+  directUrl = env("POSTGRES_URL_NON_POOLING") // Uses a direct connection
+}
+
+model User {
+  id            String     @id @default(cuid())
+  name          String?
+  email         String?    @unique
+  emailVerified DateTime?
+  image         String?
+  isAdmin       Boolean    @default(false)
+  accounts      Account[]
+  sessions      Session[]
+  // New relations
+  clientOf      User?      @relation("AdminClient", fields: [adminId], references: [id])
+  adminId       String?
+  clients       User[]     @relation("AdminClient")
+  workouts      Workout[]  @relation("AssignedWorkouts")
+  messages      Message[]  @relation("UserMessages")
+  createdWorkouts Workout[] @relation("CreatedWorkouts")
+  createdExercises Exercise[]  @relation("CreatedExercises")
+  billing       Billing[]
+}
+
+model Account {
+  id                 String  @id @default(cuid())
+  userId             String
+  type               String
+  provider           String
+  providerAccountId  String
+  refresh_token      String?  @db.Text
+  access_token       String?  @db.Text
+  expires_at         Int?
+  token_type         String?
+  scope              String?
+  id_token           String?  @db.Text
+  session_state      String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Exercise {
+  id          String    @id @default(cuid())
+  name        String
+  description String?   @db.Text
+  videoUrl    String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  createdBy   User      @relation("CreatedExercises", fields: [userId], references: [id])
+  userId      String
+  workouts    WorkoutExercise[]
+}
+
+model Workout {
+  id          String    @id @default(cuid())
+  name        String
+  description String?   @db.Text
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  createdBy   User      @relation("CreatedWorkouts", fields: [createdById], references: [id])
+  createdById String
+  assignedTo  User[]    @relation("AssignedWorkouts")
+  exercises   WorkoutExercise[]
+}
+
+model WorkoutExercise {
+  id          String    @id @default(cuid())
+  workout     Workout   @relation(fields: [workoutId], references: [id])
+  workoutId   String
+  exercise    Exercise  @relation(fields: [exerciseId], references: [id])
+  exerciseId  String
+  sets        Int
+  reps        Int
+  notes       String?   @db.Text
+  order       Int
+
+  @@unique([workoutId, order])
+}
+
+model Message {
+  id        String   @id @default(cuid())
+  content   String   @db.Text
+  createdAt DateTime @default(now())
+  user      User     @relation("UserMessages", fields: [userId], references: [id])
+  userId    String
+  read      Boolean  @default(false)
+}
+
+model Billing {
+  id        String   @id @default(cuid())
+  amount    Float
+  status    String   // 'paid', 'pending', 'overdue'
+  dueDate   DateTime
+  paidAt    DateTime?
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
