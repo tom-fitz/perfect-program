@@ -1,14 +1,14 @@
-import { auth, signOut } from "@/auth";
-import { redirect } from "next/navigation";
-import { ArrowLeft, Mail, Calendar, LogOut } from "lucide-react";
-import Link from "next/link";
-import Image from "next/image";
+import { auth, signOut } from '@/auth';
+import { redirect } from 'next/navigation';
+import { ArrowLeft, Mail, Calendar, LogOut } from 'lucide-react';
+import Link from 'next/link';
+import Image from 'next/image';
 
 export default async function ProfilePage() {
   const session = await auth();
 
   console.log(session);
-  
+
   if (!session?.user) {
     redirect('/auth/signin');
   }
@@ -23,8 +23,8 @@ export default async function ProfilePage() {
     <div className="max-w-4xl mx-auto p-8">
       {/* Header with back button */}
       <div className="mb-8">
-        <Link 
-          href="/app" 
+        <Link
+          href="/app"
           className="inline-flex items-center text-gray-400 hover:text-gray-200 transition-colors"
         >
           <ArrowLeft className="w-4 h-4 mr-2" />
@@ -40,14 +40,14 @@ export default async function ProfilePage() {
               {session.user.image ? (
                 <Image
                   src={session.user.image}
-                  alt={session.user.name || "Profile picture"}
+                  alt={session.user.name || 'Profile picture'}
                   width={96}
                   height={96}
                   className="object-cover"
                 />
               ) : (
                 <div className="w-full h-full flex items-center justify-center bg-gray-800 text-gray-400">
-                  {session.user.name?.[0]?.toUpperCase() || "U"}
+                  {session.user.name?.[0]?.toUpperCase() || 'U'}
                 </div>
               )}
             </div>
@@ -73,11 +73,13 @@ export default async function ProfilePage() {
               </div>
             </div>
 
-            <form action={async () => {
-              'use server';
-              await signOut({ redirectTo: "/" });
-            }}>
-              <button 
+            <form
+              action={async () => {
+                'use server';
+                await signOut({ redirectTo: '/' });
+              }}
+            >
+              <button
                 type="submit"
                 className="inline-flex items-center px-4 py-2 rounded-lg bg-red-900/20 text-red-400 hover:bg-red-900/30 transition-colors"
               >
@@ -91,18 +93,26 @@ export default async function ProfilePage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Account Details */}
             <div className="p-6 rounded-xl bg-gray-900/50">
-              <h2 className="text-lg font-semibold mb-4 text-powder">Account Details</h2>
+              <h2 className="text-lg font-semibold mb-4 text-powder">
+                Account Details
+              </h2>
               <dl className="space-y-4">
                 <div>
                   <dt className="text-sm font-medium text-gray-400">Name</dt>
-                  <dd className="mt-1 text-sm text-gray-200">{session.user.name}</dd>
+                  <dd className="mt-1 text-sm text-gray-200">
+                    {session.user.name}
+                  </dd>
                 </div>
                 <div>
                   <dt className="text-sm font-medium text-gray-400">Email</dt>
-                  <dd className="mt-1 text-sm text-gray-200">{session.user.email}</dd>
+                  <dd className="mt-1 text-sm text-gray-200">
+                    {session.user.email}
+                  </dd>
                 </div>
                 <div>
-                  <dt className="text-sm font-medium text-gray-400">Account Type</dt>
+                  <dt className="text-sm font-medium text-gray-400">
+                    Account Type
+                  </dt>
                   <dd className="mt-1 text-sm">
                     {session.user.email === 'tpfitz42@gmail.com' ? (
                       <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-900/50 text-purple-300">
@@ -120,22 +130,34 @@ export default async function ProfilePage() {
 
             {/* Quick Stats */}
             <div className="p-6 rounded-xl bg-gray-900/50">
-              <h2 className="text-lg font-semibold mb-4 text-powder">Activity Overview</h2>
+              <h2 className="text-lg font-semibold mb-4 text-powder">
+                Activity Overview
+              </h2>
               <div className="grid grid-cols-2 gap-4">
                 <div className="p-4 bg-gray-800 rounded-lg">
-                  <div className="text-sm font-medium text-gray-400">Workouts</div>
-                  <div className="mt-1 text-2xl font-semibold text-gray-200">0</div>
+                  <div className="text-sm font-medium text-gray-400">
+                    Workouts
+                  </div>
+                  <div className="mt-1 text-2xl font-semibold text-gray-200">
+                    0
+                  </div>
                 </div>
                 <div className="p-4 bg-gray-800 rounded-lg">
-                  <div className="text-sm font-medium text-gray-400">Programs</div>
-                  <div className="mt-1 text-2xl font-semibold text-gray-200">0</div>
+                  <div className="text-sm font-medium text-gray-400">
+                    Programs
+                  </div>
+                  <div className="mt-1 text-2xl font-semibold text-gray-200">
+                    0
+                  </div>
                 </div>
               </div>
             </div>
 
             {/* Recent Activity */}
             <div className="md:col-span-2 p-6 rounded-xl bg-gray-900/50">
-              <h2 className="text-lg font-semibold mb-4 text-powder">Recent Activity</h2>
+              <h2 className="text-lg font-semibold mb-4 text-powder">
+                Recent Activity
+              </h2>
               <div className="text-sm text-gray-400 text-center py-8">
                 No recent activity to display
               </div>

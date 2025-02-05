@@ -1,3 +1,3 @@
 export default async function MessagesPage() {
-    return <div>Messages</div>;
+  return <div>Messages</div>;
 }

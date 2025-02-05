@@ -1,10 +1,10 @@
 'use client';
 
-import { Home, Dumbbell, Calendar, Settings, Shield } from "lucide-react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { Session } from "next-auth";
-import UserAvatar from "./UserAvatar";
+import { Home, Dumbbell, Calendar, Settings, Shield } from 'lucide-react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { Session } from 'next-auth';
+import UserAvatar from './UserAvatar';
 
 interface NavigationProps {
   session: Session | null;
@@ -12,41 +12,43 @@ interface NavigationProps {
 }
 
 const navItems = [
-  { href: "/app", icon: Home, label: "Home" },
-  { href: "/app/workouts", icon: Dumbbell, label: "Workouts" },
-  { href: "/app/schedule", icon: Calendar, label: "Schedule" },
-  { href: "/app/settings", icon: Settings, label: "Settings" },
+  { href: '/app', icon: Home, label: 'Home' },
+  { href: '/app/workouts', icon: Dumbbell, label: 'Workouts' },
+  { href: '/app/schedule', icon: Calendar, label: 'Schedule' },
+  { href: '/app/settings', icon: Settings, label: 'Settings' }
 ];
 
-export default function Navigation({ session, initialPathname }: NavigationProps) {
+export default function Navigation({
+  session,
+  initialPathname
+}: NavigationProps) {
   const pathname = usePathname() || initialPathname;
-  
+
   if (!session?.user) {
     return null;
   }
-  
+
   const isAdmin = session.user.email === 'tpfitz42@gmail.com';
-  
+
   return (
     <nav className="fixed left-0 top-0 h-full w-16 flex flex-col items-center py-8 bg-ebony text-powder border-r border-gray-800">
       {/* Logo */}
-      <div className="mb-8 text-xl font-bold text-sunglow">
-        PP
-      </div>
+      <div className="mb-8 text-xl font-bold text-sunglow">PP</div>
 
       {/* Navigation Items */}
       <div className="flex-1 flex flex-col items-center gap-6 w-full">
         {navItems.map(({ href, icon: Icon, label }) => {
-          const isActive = pathname.startsWith(href) && 
+          const isActive =
+            pathname.startsWith(href) &&
             (href === '/app' ? pathname === '/app' : true);
           return (
             <Link
               key={href}
               href={href}
               className={`relative p-3 rounded-lg transition-colors group ${
-                isActive 
-                  ? "text-sunglow bg-black/20" 
-                  : "text-powder hover:text-sunglow hover:bg-black/10"
+                isActive
+                  ? 'text-sunglow bg-black/20'
+                  : 'text-powder hover:text-sunglow hover:bg-black/10'
               }`}
               title={label}
             >
@@ -65,9 +67,9 @@ export default function Navigation({ session, initialPathname }: NavigationProps
           <Link
             href="/admin"
             className={`relative p-3 rounded-lg transition-colors ${
-              pathname.startsWith('/admin') 
-                ? "text-sunglow" 
-                : "text-powder hover:text-sunglow"
+              pathname.startsWith('/admin')
+                ? 'text-sunglow'
+                : 'text-powder hover:text-sunglow'
             }`}
             title="Admin Dashboard"
           >
@@ -80,16 +82,16 @@ export default function Navigation({ session, initialPathname }: NavigationProps
         <Link
           href="/app/profile"
           className={`relative p-3 rounded-lg transition-colors ${
-            pathname === "/app/profile" 
-              ? "text-sunglow" 
-              : "text-powder hover:text-sunglow"
+            pathname === '/app/profile'
+              ? 'text-sunglow'
+              : 'text-powder hover:text-sunglow'
           }`}
-          title={session.user.name || "Profile"}
+          title={session.user.name || 'Profile'}
         >
           <div className="w-6 h-6">
-            <UserAvatar 
-              imageUrl={session.user.image} 
-              name={session.user.name} 
+            <UserAvatar
+              imageUrl={session.user.image}
+              name={session.user.name}
             />
           </div>
           <div className="absolute left-full px-2 py-1 bg-gray-900 text-powder text-xs rounded opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
@@ -99,4 +101,4 @@ export default function Navigation({ session, initialPathname }: NavigationProps
       </div>
     </nav>
   );
-} 
+}

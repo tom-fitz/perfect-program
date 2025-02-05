@@ -1,15 +1,15 @@
-import type { NextAuthConfig } from "next-auth";
-import Google from "next-auth/providers/google";
+import type { NextAuthConfig } from 'next-auth';
+import Google from 'next-auth/providers/google';
 
 export const authConfig = {
   providers: [
     Google({
       clientId: process.env.GOOGLE_CLIENT_ID!,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-    }),
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!
+    })
   ],
   pages: {
-    signIn: "/auth/signin",
+    signIn: '/auth/signin'
   },
   callbacks: {
     authorized({ auth, request: { nextUrl } }) {
@@ -17,10 +17,10 @@ export const authConfig = {
       const isOnPublic = nextUrl.pathname.startsWith('/public');
       const isOnAuth = nextUrl.pathname.startsWith('/auth');
       const isOnApp = nextUrl.pathname.startsWith('/app');
-      
+
       // Allow public pages
       if (isOnPublic) return true;
-      
+
       // Redirect to home if logged-in user tries to access auth pages
       if (isOnAuth) {
         if (isLoggedIn) return Response.redirect(new URL('/', nextUrl));
@@ -35,6 +35,6 @@ export const authConfig = {
 
       // Allow all other routes
       return true;
-    },
-  },
-} satisfies NextAuthConfig; 
+    }
+  }
+} satisfies NextAuthConfig;

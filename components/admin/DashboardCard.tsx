@@ -10,4 +10,4 @@ export default function DashboardCard({ title, children }: DashboardCardProps) {
       {children}
     </div>
   );
-} 
+}

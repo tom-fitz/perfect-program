@@ -10,7 +10,11 @@ interface NewBillModalProps {
   templates: BillingTemplate[];
 }
 
-export default function NewBillModal({ isOpen, onClose, templates }: NewBillModalProps) {
+export default function NewBillModal({
+  isOpen,
+  onClose,
+  templates
+}: NewBillModalProps) {
   const [templateId, setTemplateId] = useState('');
   const [amount, setAmount] = useState('');
   const [description, setDescription] = useState('');
@@ -23,7 +27,7 @@ export default function NewBillModal({ isOpen, onClose, templates }: NewBillModa
   // Update amount when template is selected
   const handleTemplateChange = (id: string) => {
     setTemplateId(id);
-    const template = templates.find(t => t.id === id);
+    const template = templates.find((t) => t.id === id);
     if (template) {
       setAmount(template.amount.toString());
       setDescription(template.description || '');
@@ -66,14 +70,15 @@ export default function NewBillModal({ isOpen, onClose, templates }: NewBillModa
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center">
       <div className="bg-ebony p-6 rounded-lg w-full max-w-md">
         <h2 className="text-xl font-semibold mb-4 text-powder">New Bill</h2>
-        
+
         <form onSubmit={handleSubmit} className="space-y-4">
-          {error && (
-            <div className="text-red-500 text-sm">{error}</div>
-          )}
-          
+          {error && <div className="text-red-500 text-sm">{error}</div>}
+
           <div>
-            <label htmlFor="template" className="block text-sm font-medium text-gray-400 mb-1">
+            <label
+              htmlFor="template"
+              className="block text-sm font-medium text-gray-400 mb-1"
+            >
               Template (Optional)
             </label>
             <select
@@ -92,7 +97,10 @@ export default function NewBillModal({ isOpen, onClose, templates }: NewBillModa
           </div>
 
           <div>
-            <label htmlFor="amount" className="block text-sm font-medium text-gray-400 mb-1">
+            <label
+              htmlFor="amount"
+              className="block text-sm font-medium text-gray-400 mb-1"
+            >
               Amount
             </label>
             <input
@@ -108,7 +116,10 @@ export default function NewBillModal({ isOpen, onClose, templates }: NewBillModa
           </div>
 
           <div>
-            <label htmlFor="dueDate" className="block text-sm font-medium text-gray-400 mb-1">
+            <label
+              htmlFor="dueDate"
+              className="block text-sm font-medium text-gray-400 mb-1"
+            >
               Due Date
             </label>
             <input
@@ -122,7 +133,10 @@ export default function NewBillModal({ isOpen, onClose, templates }: NewBillModa
           </div>
 
           <div>
-            <label htmlFor="description" className="block text-sm font-medium text-gray-400 mb-1">
+            <label
+              htmlFor="description"
+              className="block text-sm font-medium text-gray-400 mb-1"
+            >
               Description
             </label>
             <textarea
@@ -154,4 +168,4 @@ export default function NewBillModal({ isOpen, onClose, templates }: NewBillModa
       </div>
     </div>
   );
-} 
+}

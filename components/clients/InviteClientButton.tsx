@@ -1,31 +1,33 @@
-'use client'
+'use client';
 
-import { useState } from 'react'
-import { Plus } from 'lucide-react'
-import { inviteUser } from '@/lib/actions/users'
+import { useState } from 'react';
+import { Plus } from 'lucide-react';
+import { inviteUser } from '@/lib/actions/users';
 
 export default function InviteClientButton() {
-  const [isOpen, setIsOpen] = useState(false)
-  const [email, setEmail] = useState('')
-  const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
-  const [error, setError] = useState('')
+  const [isOpen, setIsOpen] = useState(false);
+  const [email, setEmail] = useState('');
+  const [status, setStatus] = useState<
+    'idle' | 'loading' | 'success' | 'error'
+  >('idle');
+  const [error, setError] = useState('');
 
   async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault()
-    setStatus('loading')
-    
-    const result = await inviteUser({ email })
-    
+    e.preventDefault();
+    setStatus('loading');
+
+    const result = await inviteUser({ email });
+
     if (result.success) {
-      setStatus('success')
-      setEmail('')
+      setStatus('success');
+      setEmail('');
       setTimeout(() => {
-        setIsOpen(false)
-        setStatus('idle')
-      }, 2000)
+        setIsOpen(false);
+        setStatus('idle');
+      }, 2000);
     } else {
-      setStatus('error')
-      setError(result.error)
+      setStatus('error');
+      setError(result.error);
     }
   }
 
@@ -42,11 +44,16 @@ export default function InviteClientButton() {
       {isOpen && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center">
           <div className="bg-ebony p-6 rounded-lg w-full max-w-md">
-            <h2 className="text-xl font-semibold mb-4 text-powder">Invite New Client</h2>
+            <h2 className="text-xl font-semibold mb-4 text-powder">
+              Invite New Client
+            </h2>
             <form onSubmit={handleSubmit}>
               <div className="space-y-4">
                 <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-gray-400 mb-1">
+                  <label
+                    htmlFor="email"
+                    className="block text-sm font-medium text-gray-400 mb-1"
+                  >
                     Email Address
                   </label>
                   <input
@@ -58,7 +65,7 @@ export default function InviteClientButton() {
                     required
                   />
                 </div>
-                
+
                 {status === 'error' && (
                   <div className="text-red-500 text-sm">{error}</div>
                 )}
@@ -76,9 +83,11 @@ export default function InviteClientButton() {
                     disabled={status === 'loading'}
                     className="px-4 py-2 bg-sunglow text-ebony rounded-lg hover:bg-sunglow/90 transition-colors font-medium disabled:opacity-50"
                   >
-                    {status === 'loading' ? 'Sending...' : 
-                     status === 'success' ? 'Sent!' : 
-                     'Send Invite'}
+                    {status === 'loading'
+                      ? 'Sending...'
+                      : status === 'success'
+                        ? 'Sent!'
+                        : 'Send Invite'}
                   </button>
                 </div>
               </div>
@@ -87,5 +96,5 @@ export default function InviteClientButton() {
         </div>
       )}
     </>
-  )
-} 
+  );
+}

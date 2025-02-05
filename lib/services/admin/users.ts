@@ -1,12 +1,12 @@
-import { BaseService } from '../../base-service'
-import { UnauthorizedError } from '@/lib/errors'
-import { getUserContext } from '@/lib/context'
+import { BaseService } from '../../base-service';
+import { UnauthorizedError } from '@/lib/errors';
+import { getUserContext } from '@/lib/context';
 
 export class AdminUserService extends BaseService {
   constructor(user: Awaited<ReturnType<typeof getUserContext>>['user']) {
-    super(user)
+    super(user);
     if (!user.isAdmin) {
-      throw new UnauthorizedError('Admin access required')
+      throw new UnauthorizedError('Admin access required');
     }
   }
 
@@ -18,7 +18,7 @@ export class AdminUserService extends BaseService {
       orderBy: {
         name: 'asc'
       }
-    })
+    });
   }
 
   async createInvite(email: string) {
@@ -38,9 +38,9 @@ export class AdminUserService extends BaseService {
         adminId: this.user.id, // Connect to the admin who created the invite
         isAdmin: false
       }
-    })
+    });
 
-    return user
+    return user;
   }
 
   async getTotalUsers() {

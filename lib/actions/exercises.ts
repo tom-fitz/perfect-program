@@ -1,12 +1,12 @@
 'use server';
 
-import { getServices } from "@/lib/services";
-import { revalidatePath } from "next/cache";
-import { Difficulty } from "@prisma/client";
+import { getServices } from '@/lib/services';
+import { revalidatePath } from 'next/cache';
+import { Difficulty } from '@prisma/client';
 
-export async function createExercise(data: { 
-  name: string; 
-  description: string; 
+export async function createExercise(data: {
+  name: string;
+  description: string;
   videoUrl: string;
   bodyPartId: string;
   equipmentIds: string[];
@@ -19,10 +19,10 @@ export async function createExercise(data: {
     revalidatePath('/admin/exercises');
     revalidatePath('/app/exercises');
     return { success: true, data: exercise };
-  } catch (error: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
-    return { 
-      success: false, 
-      error: error.message || 'Failed to create exercise' 
+  } catch (error: Error | unknown) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Failed to create exercise'
     };
   }
-} 
+}

@@ -15,8 +15,8 @@ export default function NavigationWrapper() {
     setMounted(true);
     // Fetch session on client side to avoid hydration mismatch
     fetch('/api/auth/session')
-      .then(res => res.json())
-      .then(data => setSession(data));
+      .then((res) => res.json())
+      .then((data) => setSession(data));
   }, []);
 
   // Don't render anything until after hydration

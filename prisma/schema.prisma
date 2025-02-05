@@ -32,6 +32,8 @@ model User {
   createdExercises Exercise[]  @relation("CreatedExercises")
   billing       Billing[]
   createdTemplates BillingTemplate[] @relation("CreatedTemplates")
+  createdPrograms Program[] @relation("CreatedPrograms")
+  assignedPrograms Program[] @relation("AssignedPrograms")
   createdAt     DateTime   @default(now())
 }
 
@@ -106,30 +108,69 @@ enum Difficulty {
   ADVANCED
 }
 
-model Workout {
+model Program {
   id          String    @id @default(cuid())
   name        String
   description String?   @db.Text
+  workouts    ProgramWorkout[]
+  createdBy   User      @relation("CreatedPrograms", fields: [createdById], references: [id])
+  createdById String
+  assignedTo  User[]    @relation("AssignedPrograms")
+  duration    Int       // Program duration in weeks
+  difficulty  Difficulty
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
-  createdBy   User      @relation("CreatedWorkouts", fields: [createdById], references: [id])
+
+  @@index([createdById])
+}
+
+model ProgramWorkout {
+  id        String   @id @default(cuid())
+  program   Program  @relation(fields: [programId], references: [id])
+  programId String
+  workout   Workout  @relation(fields: [workoutId], references: [id])
+  workoutId String
+  weekNumber Int     // Week in the program
+  dayNumber  Int     // Day of the week
+  order     Int      // Order within the day
+
+  @@unique([programId, weekNumber, dayNumber, order])
+  @@index([programId])
+  @@index([workoutId])
+}
+
+model Workout {
+  id          String     @id @default(cuid())
+  name        String
+  description String?
+  duration    Int
+  difficulty  Difficulty @default(BEGINNER)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  createdBy   User       @relation("CreatedWorkouts", fields: [createdById], references: [id])
   createdById String
-  assignedTo  User[]    @relation("AssignedWorkouts")
   exercises   WorkoutExercise[]
+  programs    ProgramWorkout[]
+  assignedTo  User[]     @relation("AssignedWorkouts")
+
+  @@index([createdById])
 }
 
 model WorkoutExercise {
-  id          String    @id @default(cuid())
-  workout     Workout   @relation(fields: [workoutId], references: [id])
-  workoutId   String
-  exercise    Exercise  @relation(fields: [exerciseId], references: [id])
-  exerciseId  String
-  sets        Int
-  reps        Int
-  notes       String?   @db.Text
-  order       Int
+  id         String   @id @default(cuid())
+  workout    Workout  @relation(fields: [workoutId], references: [id], onDelete: Cascade)
+  workoutId  String
+  exercise   Exercise @relation(fields: [exerciseId], references: [id])
+  exerciseId String
+  sets       Int
+  reps       Int?     // null for time-based exercises
+  duration   Int?     // in seconds, null for rep-based exercises
+  order      Int      // for exercise sequence
+  notes      String?
+  restPeriod Int      // Add this field (in seconds)
 
-  @@unique([workoutId, order])
+  @@index([workoutId])
+  @@index([exerciseId])
 }
 
 model Message {

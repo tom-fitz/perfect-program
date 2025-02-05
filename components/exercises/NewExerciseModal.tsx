@@ -23,9 +23,9 @@ interface ExerciseFormData {
   difficulty: Difficulty;
 }
 
-export default function NewExerciseModal({ 
-  isOpen, 
-  onClose, 
+export default function NewExerciseModal({
+  isOpen,
+  onClose,
   onSubmit,
   bodyParts,
   equipment,
@@ -75,7 +75,9 @@ export default function NewExerciseModal({
             <input
               type="text"
               value={formData.name}
-              onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
+              onChange={(e) =>
+                setFormData((prev) => ({ ...prev, name: e.target.value }))
+              }
               className="w-full bg-black/20 border border-gray-800 rounded-lg px-3 py-2 text-powder"
               required
             />
@@ -87,12 +89,14 @@ export default function NewExerciseModal({
             </label>
             <select
               value={formData.bodyPartId}
-              onChange={(e) => setFormData(prev => ({ ...prev, bodyPartId: e.target.value }))}
+              onChange={(e) =>
+                setFormData((prev) => ({ ...prev, bodyPartId: e.target.value }))
+              }
               className="w-full bg-black/20 border border-gray-800 rounded-lg px-3 py-2 text-powder"
               required
             >
               <option value="">Select Body Part</option>
-              {bodyParts.map(part => (
+              {bodyParts.map((part) => (
                 <option key={part.id} value={part.id}>
                   {part.name}
                 </option>
@@ -105,7 +109,7 @@ export default function NewExerciseModal({
               Equipment
             </label>
             <div className="space-y-2">
-              {equipment.map(item => (
+              {equipment.map((item) => (
                 <label key={item.id} className="flex items-center">
                   <input
                     type="checkbox"
@@ -113,8 +117,11 @@ export default function NewExerciseModal({
                     onChange={(e) => {
                       const newIds = e.target.checked
                         ? [...formData.equipmentIds, item.id]
-                        : formData.equipmentIds.filter(id => id !== item.id);
-                      setFormData(prev => ({ ...prev, equipmentIds: newIds }));
+                        : formData.equipmentIds.filter((id) => id !== item.id);
+                      setFormData((prev) => ({
+                        ...prev,
+                        equipmentIds: newIds
+                      }));
                     }}
                     className="mr-2"
                   />
@@ -130,12 +137,14 @@ export default function NewExerciseModal({
             </label>
             <select
               value={formData.typeId}
-              onChange={(e) => setFormData(prev => ({ ...prev, typeId: e.target.value }))}
+              onChange={(e) =>
+                setFormData((prev) => ({ ...prev, typeId: e.target.value }))
+              }
               className="w-full bg-black/20 border border-gray-800 rounded-lg px-3 py-2 text-powder"
               required
             >
               <option value="">Select Type</option>
-              {exerciseTypes.map(type => (
+              {exerciseTypes.map((type) => (
                 <option key={type.id} value={type.id}>
                   {type.name}
                 </option>
@@ -149,10 +158,12 @@ export default function NewExerciseModal({
             </label>
             <select
               value={formData.difficulty}
-              onChange={(e) => setFormData(prev => ({ 
-                ...prev, 
-                difficulty: e.target.value as Difficulty 
-              }))}
+              onChange={(e) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  difficulty: e.target.value as Difficulty
+                }))
+              }
               className="w-full bg-black/20 border border-gray-800 rounded-lg px-3 py-2 text-powder"
               required
             >
@@ -168,7 +179,12 @@ export default function NewExerciseModal({
             </label>
             <textarea
               value={formData.description}
-              onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
+              onChange={(e) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  description: e.target.value
+                }))
+              }
               className="w-full bg-black/20 border border-gray-800 rounded-lg px-3 py-2 text-powder min-h-[100px]"
               required
             />
@@ -181,7 +197,9 @@ export default function NewExerciseModal({
             <input
               type="url"
               value={formData.videoUrl}
-              onChange={(e) => setFormData(prev => ({ ...prev, videoUrl: e.target.value }))}
+              onChange={(e) =>
+                setFormData((prev) => ({ ...prev, videoUrl: e.target.value }))
+              }
               className="w-full bg-black/20 border border-gray-800 rounded-lg px-3 py-2 text-powder"
               placeholder="YouTube URL"
               required
@@ -207,4 +225,4 @@ export default function NewExerciseModal({
       </div>
     </div>
   );
-} 
+}

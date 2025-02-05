@@ -9,7 +9,13 @@ interface StatCardProps {
   href: string;
 }
 
-export default function StatCard({ title, value, icon: Icon, trend, href }: StatCardProps) {
+export default function StatCard({
+  title,
+  value,
+  icon: Icon,
+  trend,
+  href
+}: StatCardProps) {
   return (
     <Link href={href} className="block">
       <div className="p-6 bg-ebony rounded-lg hover:bg-ebony/80 transition-colors">
@@ -24,4 +30,4 @@ export default function StatCard({ title, value, icon: Icon, trend, href }: Stat
       </div>
     </Link>
   );
-} 
+}

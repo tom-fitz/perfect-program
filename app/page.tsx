@@ -1,6 +1,6 @@
-import { auth, signOut } from "@/auth";
-import Image from "next/image";
-import Link from "next/link";
+import { auth, signOut } from '@/auth';
+import Image from 'next/image';
+import Link from 'next/link';
 
 export default async function Home() {
   const session = await auth();
@@ -17,7 +17,7 @@ export default async function Home() {
             height={38}
             priority
           />
-          
+
           {session?.user ? (
             <div className="flex items-center gap-4">
               <Link
@@ -32,7 +32,7 @@ export default async function Home() {
                   await signOut();
                 }}
               >
-                <button 
+                <button
                   type="submit"
                   className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
                 >
@@ -52,19 +52,25 @@ export default async function Home() {
 
         {session?.user ? (
           <div className="text-center sm:text-left">
-            <h1 className="text-2xl font-bold mb-2">Welcome back, {session.user.name}!</h1>
-            <p className="text-gray-600 dark:text-gray-400">{"You're signed in with" + session.user.email}</p>
+            <h1 className="text-2xl font-bold mb-2">
+              Welcome back, {session.user.name}!
+            </h1>
+            <p className="text-gray-600 dark:text-gray-400">
+              {"You're signed in with" + session.user.email}
+            </p>
           </div>
         ) : (
           <div className="text-center sm:text-left">
             <h1 className="text-2xl font-bold mb-2">Welcome to Next.js</h1>
-            <p className="text-gray-600 dark:text-gray-400">Sign in to access your dashboard</p>
+            <p className="text-gray-600 dark:text-gray-400">
+              Sign in to access your dashboard
+            </p>
           </div>
         )}
 
         <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
           <li className="mb-2">
-            Get started by editing{" "}
+            Get started by editing{' '}
             <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
               app/page.tsx
             </code>

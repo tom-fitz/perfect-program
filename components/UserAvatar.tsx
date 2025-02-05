@@ -1,7 +1,7 @@
 'use client';
 
-import Image from "next/image";
-import { User } from "lucide-react";
+import Image from 'next/image';
+import { User } from 'lucide-react';
 
 interface UserAvatarProps {
   imageUrl?: string | null;
@@ -27,4 +27,4 @@ export default function UserAvatar({ imageUrl, name }: UserAvatarProps) {
       />
     </div>
   );
-} 
+}

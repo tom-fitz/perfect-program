@@ -1,18 +1,19 @@
-import { getServices } from "@/lib/services";
-import ExercisesClient from "./ExercisesClient";
+import { getServices } from '@/lib/services';
+import ExercisesClient from './ExercisesClient';
 
 export default async function AdminExercisesPage() {
   const { exercises: exerciseService } = await getServices();
-  const [initialExercises, bodyParts, equipment, exerciseTypes] = await Promise.all([
-    exerciseService.getExercises(),
-    exerciseService.getBodyParts(),
-    exerciseService.getEquipment(),
-    exerciseService.getExerciseTypes()
-  ]);
+  const [initialExercises, bodyParts, equipment, exerciseTypes] =
+    await Promise.all([
+      exerciseService.getExercises(),
+      exerciseService.getBodyParts(),
+      exerciseService.getEquipment(),
+      exerciseService.getExerciseTypes()
+    ]);
 
   return (
     <div className="p-6">
-      <ExercisesClient 
+      <ExercisesClient
         initialExercises={initialExercises}
         bodyParts={bodyParts}
         equipment={equipment}
@@ -20,4 +21,4 @@ export default async function AdminExercisesPage() {
       />
     </div>
   );
-} 
+}

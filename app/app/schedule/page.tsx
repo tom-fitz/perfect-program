@@ -1,3 +1,3 @@
 export default async function SchedulePage() {
-    return <div>Schedule</div>;
+  return <div>Schedule</div>;
 }

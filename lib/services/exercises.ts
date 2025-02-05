@@ -1,6 +1,6 @@
-import { BaseService } from "../base-service";
-import { UnauthorizedError } from "@/lib/errors";
-import { Difficulty, Prisma } from "@prisma/client";
+import { BaseService } from '../base-service';
+import { UnauthorizedError } from '@/lib/errors';
+import { Difficulty, Prisma } from '@prisma/client';
 
 interface FilterOptions {
   bodyPart?: string;
@@ -13,7 +13,7 @@ interface FilterOptions {
 export class ExerciseService extends BaseService {
   async getExercises(filters?: FilterOptions) {
     const where: Prisma.ExerciseWhereInput = {};
-    
+
     if (filters) {
       if (filters.bodyPart) {
         where.bodyPartId = filters.bodyPart;
@@ -102,7 +102,7 @@ export class ExerciseService extends BaseService {
         typeId: data.typeId,
         difficulty: data.difficulty,
         equipment: {
-          connect: data.equipmentIds.map(id => ({ id }))
+          connect: data.equipmentIds.map((id) => ({ id }))
         }
       },
       include: {

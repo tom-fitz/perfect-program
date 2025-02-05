@@ -11,8 +11,16 @@ async function main() {
 
   // Create body parts
   const bodyParts = [
-    'Chest', 'Back', 'Shoulders', 'Biceps', 'Triceps', 
-    'Quadriceps', 'Hamstrings', 'Calves', 'Core', 'Full Body'
+    'Chest',
+    'Back',
+    'Shoulders',
+    'Biceps',
+    'Triceps',
+    'Quadriceps',
+    'Hamstrings',
+    'Calves',
+    'Core',
+    'Full Body'
   ];
 
   for (const name of bodyParts) {
@@ -21,9 +29,17 @@ async function main() {
 
   // Create equipment types
   const equipmentTypes = [
-    'Bodyweight', 'Dumbbells', 'Barbell', 'Kettlebell',
-    'Resistance Bands', 'Cable Machine', 'Smith Machine',
-    'Pull-up Bar', 'Bench', 'Medicine Ball', 'Yoga Mat'
+    'Bodyweight',
+    'Dumbbells',
+    'Barbell',
+    'Kettlebell',
+    'Resistance Bands',
+    'Cable Machine',
+    'Smith Machine',
+    'Pull-up Bar',
+    'Bench',
+    'Medicine Ball',
+    'Yoga Mat'
   ];
 
   for (const name of equipmentTypes) {
@@ -32,8 +48,14 @@ async function main() {
 
   // Create exercise types
   const exerciseTypes = [
-    'Strength', 'Hypertrophy', 'Endurance', 'Power',
-    'Flexibility', 'Balance', 'Cardio', 'HIIT'
+    'Strength',
+    'Hypertrophy',
+    'Endurance',
+    'Power',
+    'Flexibility',
+    'Balance',
+    'Cardio',
+    'HIIT'
   ];
 
   for (const name of exerciseTypes) {
@@ -50,4 +72,4 @@ main()
   })
   .finally(async () => {
     await prisma.$disconnect();
-  }); 
+  });

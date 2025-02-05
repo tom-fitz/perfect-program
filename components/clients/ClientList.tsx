@@ -1,4 +1,4 @@
-import { User } from "@prisma/client"
+import { User } from '@prisma/client';
 
 export default function ClientList({ clients }: { clients: User[] }) {
   if (clients.length === 0) {
@@ -6,7 +6,7 @@ export default function ClientList({ clients }: { clients: User[] }) {
       <div className="text-center py-8 text-gray-400">
         No clients to display
       </div>
-    )
+    );
   }
 
   return (
@@ -22,13 +22,14 @@ export default function ClientList({ clients }: { clients: User[] }) {
         </thead>
         <tbody>
           {clients.map((client) => (
-            <tr key={client.id} className="border-b border-gray-800 last:border-0">
+            <tr
+              key={client.id}
+              className="border-b border-gray-800 last:border-0"
+            >
               <td className="p-4 text-powder">
                 {client.name || 'Pending Invite'}
               </td>
-              <td className="p-4 text-powder">
-                {client.email}
-              </td>
+              <td className="p-4 text-powder">{client.email}</td>
               <td className="p-4 text-powder">
                 {new Date(client.createdAt).toLocaleDateString()}
               </td>
@@ -48,5 +49,5 @@ export default function ClientList({ clients }: { clients: User[] }) {
         </tbody>
       </table>
     </div>
-  )
-} 
+  );
+}

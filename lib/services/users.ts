@@ -1,10 +1,11 @@
-import { BaseService } from "../base-service";
-import { User } from "@prisma/client";
+import { BaseService } from '../base-service';
+import { User } from '@prisma/client';
+import { UnauthorizedError } from '../errors';
 
 export class UserService extends BaseService {
-  async getOrCreateUser(data: { 
-    email: string; 
-    name?: string | null; 
+  async getOrCreateUser(data: {
+    email: string;
+    name?: string | null;
     image?: string | null;
   }): Promise<User> {
     const user = await this.prisma.user.findUnique({
@@ -36,4 +37,21 @@ export class UserService extends BaseService {
 
     return user;
   }
-} 
+
+  async getTotalUsers(): Promise<number> {
+    if (!this.user.isAdmin) {
+      throw new UnauthorizedError('Only admins can view user stats');
+    }
+    return this.prisma.user.count();
+  }
+
+  async getRecentUsers(): Promise<User[]> {
+    if (!this.user.isAdmin) {
+      throw new UnauthorizedError('Only admins can view user stats');
+    }
+    return this.prisma.user.findMany({
+      orderBy: { createdAt: 'desc' },
+      take: 5
+    });
+  }
+}

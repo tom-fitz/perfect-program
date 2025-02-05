@@ -1,10 +1,10 @@
 'use client';
 
-import { Exercise } from "@prisma/client";
-import { Video, X } from "lucide-react";
-import YouTube from "react-youtube";
-import { useState } from "react";
-import { FilterState } from "./ExerciseFilters";
+import { Exercise } from '@prisma/client';
+import { Video, X } from 'lucide-react';
+import YouTube from 'react-youtube';
+import { useState } from 'react';
+import { FilterState } from './ExerciseFilters';
 
 type ExerciseWithCreator = Exercise & {
   createdBy: { name: string | null };
@@ -18,7 +18,7 @@ interface ExerciseListProps {
 
 function getYouTubeId(url: string | null) {
   if (!url) return null;
-  
+
   try {
     const urlObj = new URL(url);
     if (urlObj.hostname.includes('youtube.com')) {
@@ -37,21 +37,8 @@ function getYouTubeId(url: string | null) {
   return null;
 }
 
-export default function ExerciseList({ 
-  exercises,
-}: ExerciseListProps) {
+export default function ExerciseList({ exercises }: ExerciseListProps) {
   const [activeVideo, setActiveVideo] = useState<string | null>(null);
-//   const [_, setSearchTerm] = useState("");
-
-//   const handleSearch = useCallback(
-//     async (term: string) => {
-//       setSearchTerm(term);
-//       if (onFilter) {
-//         await onFilter({ search: term, equipment: [] });
-//       }
-//     },
-//     [onFilter]
-//   );
 
   if (exercises.length === 0) {
     return (
@@ -69,8 +56,8 @@ export default function ExerciseList({
           const isPlaying = activeVideo === exercise.id;
 
           return (
-            <div 
-              key={exercise.id} 
+            <div
+              key={exercise.id}
               className="bg-ebony rounded-lg shadow-md border border-gray-800 overflow-hidden hover:shadow-lg transition-shadow"
             >
               <div className="aspect-video bg-black/20">
@@ -85,7 +72,7 @@ export default function ExerciseList({
                           autoplay: 1,
                           modestbranding: 1,
                           rel: 0
-                        },
+                        }
                       }}
                       onEnd={() => setActiveVideo(null)}
                       className="absolute inset-0"
@@ -99,7 +86,7 @@ export default function ExerciseList({
                     </button>
                   </div>
                 ) : (
-                  <div 
+                  <div
                     className="w-full h-full flex items-center justify-center cursor-pointer group"
                     onClick={() => videoId && setActiveVideo(exercise.id)}
                   >
@@ -109,7 +96,9 @@ export default function ExerciseList({
               </div>
               <div className="p-4">
                 <div className="flex justify-between items-start mb-2">
-                  <h3 className="font-semibold text-lg text-powder">{exercise.name}</h3>
+                  <h3 className="font-semibold text-lg text-powder">
+                    {exercise.name}
+                  </h3>
                   {/* {isAdmin && (
                     <div className="flex gap-2">
                       <button className="p-1 text-gray-400 hover:text-sunglow transition-colors">
@@ -127,7 +116,7 @@ export default function ExerciseList({
                 <div className="flex items-center justify-between text-sm text-gray-400">
                   <span>Added by {exercise.createdBy.name}</span>
                   {videoId && !isPlaying && (
-                    <button 
+                    <button
                       onClick={() => setActiveVideo(exercise.id)}
                       className="text-sunglow hover:text-sunglow/80 transition-colors"
                     >
@@ -142,4 +131,4 @@ export default function ExerciseList({
       </div>
     </div>
   );
-} 
+}

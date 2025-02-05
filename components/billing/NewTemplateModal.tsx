@@ -8,7 +8,10 @@ interface NewTemplateModalProps {
   onClose: () => void;
 }
 
-export default function NewTemplateModal({ isOpen, onClose }: NewTemplateModalProps) {
+export default function NewTemplateModal({
+  isOpen,
+  onClose
+}: NewTemplateModalProps) {
   const [name, setName] = useState('');
   const [amount, setAmount] = useState('');
   const [description, setDescription] = useState('');
@@ -26,7 +29,7 @@ export default function NewTemplateModal({ isOpen, onClose }: NewTemplateModalPr
       const result = await createBillingTemplate({
         name,
         amount: parseFloat(amount),
-        description: description || undefined,
+        description: description || undefined
       });
 
       if (result.success) {
@@ -49,15 +52,18 @@ export default function NewTemplateModal({ isOpen, onClose }: NewTemplateModalPr
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center">
       <div className="bg-ebony p-6 rounded-lg w-full max-w-md">
-        <h2 className="text-xl font-semibold mb-4 text-powder">New Billing Template</h2>
-        
+        <h2 className="text-xl font-semibold mb-4 text-powder">
+          New Billing Template
+        </h2>
+
         <form onSubmit={handleSubmit} className="space-y-4">
-          {error && (
-            <div className="text-red-500 text-sm">{error}</div>
-          )}
-          
+          {error && <div className="text-red-500 text-sm">{error}</div>}
+
           <div>
-            <label htmlFor="name" className="block text-sm font-medium text-gray-400 mb-1">
+            <label
+              htmlFor="name"
+              className="block text-sm font-medium text-gray-400 mb-1"
+            >
               Template Name
             </label>
             <input
@@ -71,7 +77,10 @@ export default function NewTemplateModal({ isOpen, onClose }: NewTemplateModalPr
           </div>
 
           <div>
-            <label htmlFor="amount" className="block text-sm font-medium text-gray-400 mb-1">
+            <label
+              htmlFor="amount"
+              className="block text-sm font-medium text-gray-400 mb-1"
+            >
               Amount
             </label>
             <input
@@ -87,7 +96,10 @@ export default function NewTemplateModal({ isOpen, onClose }: NewTemplateModalPr
           </div>
 
           <div>
-            <label htmlFor="description" className="block text-sm font-medium text-gray-400 mb-1">
+            <label
+              htmlFor="description"
+              className="block text-sm font-medium text-gray-400 mb-1"
+            >
               Description
             </label>
             <textarea
@@ -119,4 +131,4 @@ export default function NewTemplateModal({ isOpen, onClose }: NewTemplateModalPr
       </div>
     </div>
   );
-} 
+}

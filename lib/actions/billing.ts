@@ -1,9 +1,9 @@
 'use server';
 
-import { getServices } from "@/lib/services";
-import { revalidatePath } from "next/cache";
+import { getServices } from '@/lib/services';
+import { revalidatePath } from 'next/cache';
 
-export async function createBillingTemplate(data: { 
+export async function createBillingTemplate(data: {
   name: string;
   amount: number;
   description?: string;
@@ -13,15 +13,15 @@ export async function createBillingTemplate(data: {
     const template = await adminBilling.createTemplate(data);
     revalidatePath('/admin/billing');
     return { success: true, data: template };
-  } catch (error: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
-    return { 
-      success: false, 
-      error: error.message || 'Failed to create template' 
+  } catch (error: Error | unknown) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Failed to create template'
     };
   }
 }
 
-export async function createBill(data: { 
+export async function createBill(data: {
   amount: number;
   dueDate: Date;
   description?: string;
@@ -34,10 +34,10 @@ export async function createBill(data: {
     const bill = await adminBilling.createBill(data);
     revalidatePath('/admin/billing');
     return { success: true, data: bill };
-  } catch (error: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
-    return { 
-      success: false, 
-      error: error.message || 'Failed to create bill' 
+  } catch (error: Error | unknown) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Failed to create bill'
     };
   }
-} 
+}

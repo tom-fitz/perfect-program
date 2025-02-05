@@ -1,18 +1,18 @@
-import { getServices } from "@/lib/services"
-import { getUserContext } from "@/lib/context"
-import ClientList from "@/components/clients/ClientList"
-import InviteClientButton from "@/components/clients/InviteClientButton"
-import { redirect } from "next/navigation"
+import { getServices } from '@/lib/services';
+import { getUserContext } from '@/lib/context';
+import ClientList from '@/components/clients/ClientList';
+import InviteClientButton from '@/components/clients/InviteClientButton';
+import { redirect } from 'next/navigation';
 
 export default async function ClientsPage() {
-  const { adminUsers } = await getServices()
-  const { user } = await getUserContext()
-  
+  const { adminUsers } = await getServices();
+  const { user } = await getUserContext();
+
   if (!user.isAdmin) {
-    redirect('/app')
+    redirect('/app');
   }
 
-  const clients = await adminUsers.getUsers()
+  const clients = await adminUsers.getUsers();
 
   return (
     <div className="max-w-6xl mx-auto">
@@ -22,5 +22,5 @@ export default async function ClientsPage() {
       </div>
       <ClientList clients={clients} />
     </div>
-  )
-} 
+  );
+}

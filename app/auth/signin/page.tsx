@@ -1,10 +1,10 @@
-import { auth, signIn } from "@/auth";
-import { redirect } from "next/navigation";
-import Image from "next/image";
+import { auth, signIn } from '@/auth';
+import { redirect } from 'next/navigation';
+import Image from 'next/image';
 
 export default async function SignIn() {
   const session = await auth();
-  
+
   if (session?.user) {
     redirect('/');
   }
@@ -21,11 +21,11 @@ export default async function SignIn() {
             height={25}
             priority
           />
-          
+
           <form
             action={async () => {
-              "use server";
-              await signIn("google", { redirectTo: "/app" });
+              'use server';
+              await signIn('google', { redirectTo: '/app' });
             }}
           >
             <button
@@ -45,4 +45,4 @@ export default async function SignIn() {
       </div>
     </div>
   );
-} 
+}

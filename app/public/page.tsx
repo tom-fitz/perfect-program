@@ -7,4 +7,4 @@ export default function PublicPage() {
       </div>
     </div>
   );
-} 
+}

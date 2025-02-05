@@ -7,9 +7,8 @@ import BillList from './BillList';
 import NewBillModal from './NewBillModal';
 import NewTemplateModal from './NewTemplateModal';
 
-
 type BillWithDetails = Billing & {
-  user: { name: string | null; email: string | null; } | null;
+  user: { name: string | null; email: string | null } | null;
   template: BillingTemplate | null;
 };
 
@@ -18,13 +17,18 @@ interface BillingDashboardProps {
   templates: BillingTemplate[];
 }
 
-export default function BillingDashboard({ bills, templates }: BillingDashboardProps) {
+export default function BillingDashboard({
+  bills,
+  templates
+}: BillingDashboardProps) {
   const [isNewBillModalOpen, setIsNewBillModalOpen] = useState(false);
   const [isNewTemplateModalOpen, setIsNewTemplateModalOpen] = useState(false);
 
-  const draftBills = bills.filter(bill => bill.status === 'draft');
-  const pendingBills = bills.filter(bill => bill.status === 'pending' || bill.status === 'overdue');
-  const paidBills = bills.filter(bill => bill.status === 'paid');
+  const draftBills = bills.filter((bill) => bill.status === 'draft');
+  const pendingBills = bills.filter(
+    (bill) => bill.status === 'pending' || bill.status === 'overdue'
+  );
+  const paidBills = bills.filter((bill) => bill.status === 'paid');
 
   return (
     <div className="space-y-8">
@@ -48,13 +52,17 @@ export default function BillingDashboard({ bills, templates }: BillingDashboardP
       <div className="grid gap-8">
         {draftBills.length > 0 && (
           <section>
-            <h2 className="text-xl font-semibold mb-4 text-powder">Draft Bills</h2>
+            <h2 className="text-xl font-semibold mb-4 text-powder">
+              Draft Bills
+            </h2>
             <BillList bills={draftBills} />
           </section>
         )}
 
         <section>
-          <h2 className="text-xl font-semibold mb-4 text-powder">Outstanding Bills</h2>
+          <h2 className="text-xl font-semibold mb-4 text-powder">
+            Outstanding Bills
+          </h2>
           <BillList bills={pendingBills} />
         </section>
 
@@ -76,4 +84,4 @@ export default function BillingDashboard({ bills, templates }: BillingDashboardP
       />
     </div>
   );
-} 
+}
