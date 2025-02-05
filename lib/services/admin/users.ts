@@ -23,13 +23,13 @@ export class AdminUserService extends BaseService {
 
   async createInvite(email: string) {
     // First check if user already exists
-    const existingUser = await this.prisma.user.findUnique({
-      where: { email }
-    })
+    // const existingUser = await this.prisma.user.findUnique({
+    //   where: { email }
+    // })
 
-    if (existingUser) {
-      throw new Error('User already exists')
-    }
+    // if (existingUser) {
+    //   throw new Error('User already exists')
+    // }
 
     // Create a pending user
     const user = await this.prisma.user.create({
@@ -41,5 +41,19 @@ export class AdminUserService extends BaseService {
     })
 
     return user
+  }
+
+  async getTotalUsers() {
+    return this.prisma.user.count({
+      where: { isAdmin: false }
+    });
+  }
+
+  async getRecentUsers() {
+    return this.prisma.user.findMany({
+      where: { isAdmin: false },
+      orderBy: { createdAt: 'desc' },
+      take: 5
+    });
   }
 }

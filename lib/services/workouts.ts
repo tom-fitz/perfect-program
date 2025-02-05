@@ -43,4 +43,8 @@ export class WorkoutService extends BaseService {
       }
     })
   }
+
+  async getTotalWorkouts() {
+    return this.prisma.workout.count();
+  }
 } 

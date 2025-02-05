@@ -4,19 +4,35 @@ import { Plus } from 'lucide-react';
 import { useState } from 'react';
 import NewExerciseModal from './NewExerciseModal';
 import { createExercise } from '@/lib/actions/exercises';
+import { Difficulty } from '@prisma/client';
 
-export default function NewExerciseButton() {
+interface ExerciseFormData {
+  name: string;
+  description: string;
+  videoUrl: string;
+  bodyPartId: string;
+  equipmentIds: string[];
+  typeId: string;
+  difficulty: Difficulty;
+}
+
+interface NewExerciseButtonProps {
+  bodyParts: { id: string; name: string }[];
+  equipment: { id: string; name: string }[];
+  exerciseTypes: { id: string; name: string }[];
+}
+
+export default function NewExerciseButton({
+  bodyParts,
+  equipment,
+  exerciseTypes
+}: NewExerciseButtonProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const handleSubmit = async (data: { name: string; description: string; videoUrl: string }) => {
+  const handleSubmit = async (data: ExerciseFormData) => {
     const result = await createExercise(data);
-    
     if (result.success) {
       setIsModalOpen(false);
-      // Could add a toast notification here
-    } else {
-      console.error('Error creating exercise:', result.error);
-      // Could show error in UI
     }
   };
 
@@ -34,6 +50,9 @@ export default function NewExerciseButton() {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onSubmit={handleSubmit}
+        bodyParts={bodyParts}
+        equipment={equipment}
+        exerciseTypes={exerciseTypes}
       />
     </>
   );

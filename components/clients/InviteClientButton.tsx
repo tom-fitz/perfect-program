@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { Plus } from 'lucide-react'
 import { inviteUser } from '@/lib/actions/users'
 
 export default function InviteClientButton() {
@@ -32,44 +33,54 @@ export default function InviteClientButton() {
     <>
       <button
         onClick={() => setIsOpen(true)}
-        className="rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+        className="inline-flex items-center px-4 py-2 bg-sunglow text-ebony rounded-lg hover:bg-sunglow/90 transition-colors font-medium"
       >
+        <Plus className="w-4 h-4 mr-2" />
         Invite Client
       </button>
 
       {isOpen && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center">
-          <div className="bg-white rounded-lg p-6 w-full max-w-md">
-            <h2 className="text-xl font-bold mb-4">Invite New Client</h2>
+          <div className="bg-ebony p-6 rounded-lg w-full max-w-md">
+            <h2 className="text-xl font-semibold mb-4 text-powder">Invite New Client</h2>
             <form onSubmit={handleSubmit}>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Enter client's email"
-                className="w-full p-2 border rounded mb-4"
-                required
-              />
-              {status === 'error' && (
-                <p className="text-red-600 text-sm mb-4">{error}</p>
-              )}
-              <div className="flex justify-end gap-2">
-                <button
-                  type="button"
-                  onClick={() => setIsOpen(false)}
-                  className="px-4 py-2 text-gray-600 hover:text-gray-800"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  disabled={status === 'loading'}
-                  className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
-                >
-                  {status === 'loading' ? 'Sending...' : 
-                   status === 'success' ? 'Sent!' : 
-                   'Send Invite'}
-                </button>
+              <div className="space-y-4">
+                <div>
+                  <label htmlFor="email" className="block text-sm font-medium text-gray-400 mb-1">
+                    Email Address
+                  </label>
+                  <input
+                    type="email"
+                    id="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="w-full px-3 py-2 bg-black/20 border border-gray-800 rounded-lg text-powder focus:outline-none focus:ring-2 focus:ring-sunglow"
+                    required
+                  />
+                </div>
+                
+                {status === 'error' && (
+                  <div className="text-red-500 text-sm">{error}</div>
+                )}
+
+                <div className="flex justify-end gap-3 mt-6">
+                  <button
+                    type="button"
+                    onClick={() => setIsOpen(false)}
+                    className="px-4 py-2 text-gray-400 hover:text-powder transition-colors"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={status === 'loading'}
+                    className="px-4 py-2 bg-sunglow text-ebony rounded-lg hover:bg-sunglow/90 transition-colors font-medium disabled:opacity-50"
+                  >
+                    {status === 'loading' ? 'Sending...' : 
+                     status === 'success' ? 'Sent!' : 
+                     'Send Invite'}
+                  </button>
+                </div>
               </div>
             </form>
           </div>

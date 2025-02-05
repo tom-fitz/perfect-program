@@ -31,6 +31,7 @@ model User {
   createdWorkouts Workout[] @relation("CreatedWorkouts")
   createdExercises Exercise[]  @relation("CreatedExercises")
   billing       Billing[]
+  createdTemplates BillingTemplate[] @relation("CreatedTemplates")
   createdAt     DateTime   @default(now())
 }
 
@@ -71,6 +72,38 @@ model Exercise {
   createdBy   User      @relation("CreatedExercises", fields: [userId], references: [id])
   userId      String
   workouts    WorkoutExercise[]
+  
+  // New fields
+  bodyPart    BodyPart  @relation(fields: [bodyPartId], references: [id])
+  bodyPartId  String
+  equipment   Equipment[] // Many-to-many
+  type        ExerciseType @relation(fields: [typeId], references: [id])
+  typeId      String
+  difficulty  Difficulty @default(BEGINNER)
+}
+
+model BodyPart {
+  id        String     @id @default(cuid())
+  name      String     @unique
+  exercises Exercise[]
+}
+
+model Equipment {
+  id        String     @id @default(cuid())
+  name      String     @unique
+  exercises Exercise[] // Many-to-many
+}
+
+model ExerciseType {
+  id        String     @id @default(cuid())
+  name      String     @unique
+  exercises Exercise[]
+}
+
+enum Difficulty {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
 }
 
 model Workout {
@@ -109,14 +142,29 @@ model Message {
 }
 
 model Billing {
-  id        String   @id @default(cuid())
-  amount    Float
-  status    String   // 'paid', 'pending', 'overdue'
-  dueDate   DateTime
-  paidAt    DateTime?
-  user      User     @relation(fields: [userId], references: [id])
-  userId    String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id          String    @id @default(cuid())
+  amount      Float
+  status      String    // 'draft', 'pending', 'paid', 'overdue'
+  dueDate     DateTime
+  paidAt      DateTime?
+  description String?   @db.Text
+  user        User      @relation(fields: [userId], references: [id])
+  userId      String
+  template    BillingTemplate? @relation(fields: [templateId], references: [id])
+  templateId  String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model BillingTemplate {
+  id          String    @id @default(cuid())
+  name        String
+  amount      Float
+  description String?   @db.Text
+  createdBy   User      @relation("CreatedTemplates", fields: [userId], references: [id])
+  userId      String
+  bills       Billing[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 }
 

@@ -4,6 +4,7 @@ import { ExerciseService } from './exercises'
 import { WorkoutService } from './workouts'
 import { UserService } from './users'
 import { AdminUserService } from "./admin/users"
+import { AdminBillingService } from './admin/billing'
 // import { ScheduleService } from './schedule'
 
 async function bootstrapUser() {
@@ -30,6 +31,7 @@ interface Services {
   workouts: WorkoutService;
   exercises: ExerciseService;
   adminUsers: AdminUserService;
+  adminBilling: AdminBillingService
 }
 
 export async function getServices(): Promise<Services> {
@@ -39,6 +41,7 @@ export async function getServices(): Promise<Services> {
     users: new UserService(user),
     workouts: new WorkoutService(user),
     exercises: new ExerciseService(user),
-    adminUsers: new AdminUserService(user)
+    adminUsers: new AdminUserService(user),
+    adminBilling: new AdminBillingService(user)
   }
 } 

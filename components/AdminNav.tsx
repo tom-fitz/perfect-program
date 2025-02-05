@@ -25,7 +25,7 @@ export default function AdminNav({ session }: AdminNavProps) {
   }
   
   return (
-    <nav className="fixed top-0 left-16 h-screen w-48 flex flex-col py-8 bg-ebony text-powder border-l border-gray-800">
+    <nav className="fixed top-0 left-16 h-screen w-36 flex flex-col py-8 bg-ebony text-powder border-l border-gray-800">
       <div className="flex-1 px-4">
         {adminNavItems.map(({ href, icon: Icon, label }) => {
           const isActive = pathname === href;

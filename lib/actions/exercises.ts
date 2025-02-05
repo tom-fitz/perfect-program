@@ -2,11 +2,16 @@
 
 import { getServices } from "@/lib/services";
 import { revalidatePath } from "next/cache";
+import { Difficulty } from "@prisma/client";
 
 export async function createExercise(data: { 
   name: string; 
   description: string; 
-  videoUrl: string 
+  videoUrl: string;
+  bodyPartId: string;
+  equipmentIds: string[];
+  typeId: string;
+  difficulty: Difficulty;
 }) {
   try {
     const { exercises } = await getServices();
