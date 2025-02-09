@@ -27,7 +27,7 @@ export default function InviteClientButton() {
       }, 2000);
     } else {
       setStatus('error');
-      setError(result.error);
+      setError(result.error ?? 'invite user:unexpected error occurred');
     }
   }
 

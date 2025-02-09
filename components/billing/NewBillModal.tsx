@@ -56,7 +56,7 @@ export default function NewBillModal({
         setDescription('');
         setDueDate('');
       } else {
-        setError(result.error);
+        setError(result.error ?? 'create bill:unexpected error occurred');
       }
     } catch (err) {
       console.error(err);

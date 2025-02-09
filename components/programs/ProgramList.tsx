@@ -2,6 +2,7 @@
 
 import { Program, Workout, User } from '@prisma/client';
 import { Calendar, Users } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 type ProgramWithDetails = Program & {
   workouts: {
@@ -18,6 +19,8 @@ interface ProgramListProps {
 }
 
 export default function ProgramList({ programs }: ProgramListProps) {
+  const router = useRouter();
+
   if (programs.length === 0) {
     return (
       <div className="text-center py-12 bg-ebony/20 rounded-lg">
@@ -55,9 +58,7 @@ export default function ProgramList({ programs }: ProgramListProps) {
 
           <div className="border-t border-gray-800 pt-4">
             <button
-              onClick={() => {
-                /* Open program detail view */
-              }}
+              onClick={() => router.push(`/admin/programs/${program.id}`)}
               className="text-sm text-powder hover:text-sunglow transition-colors"
             >
               View Details

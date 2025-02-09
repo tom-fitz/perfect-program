@@ -154,4 +154,49 @@ export class ProgramService extends BaseService {
       take: 5
     });
   }
+
+  async updateWorkoutOrder(programId: string, workouts: {
+    id: string;
+    weekNumber: number;
+    dayNumber: number;
+    order: number;
+  }[]) {
+    await this.prisma.$transaction(
+      workouts.map(workout => 
+        this.prisma.programWorkout.update({
+          where: {
+            programId_workoutId_weekNumber_dayNumber: {
+              programId,
+              workoutId: workout.id,
+              weekNumber: workout.weekNumber,
+              dayNumber: workout.dayNumber
+            }
+          },
+          data: {
+            order: workout.order
+          }
+        })
+      )
+    );
+  }
+
+  async addWorkoutToProgram(programId: string, data: {
+    workoutId: string;
+    weekNumber: number;
+    dayNumber: number;
+    order: number;
+  }) {
+    return this.prisma.programWorkout.create({
+      data: {
+        programId,
+        workoutId: data.workoutId,
+        weekNumber: data.weekNumber,
+        dayNumber: data.dayNumber,
+        order: data.order
+      },
+      include: {
+        workout: true
+      }
+    });
+  }
 }

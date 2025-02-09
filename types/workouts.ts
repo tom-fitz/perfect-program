@@ -10,4 +10,4 @@ export type WorkoutWithDetails = Workout & {
     notes: string | null;
     restPeriod: number;
   }[];
-};
+}; 

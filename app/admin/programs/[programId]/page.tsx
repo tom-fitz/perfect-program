@@ -9,11 +9,14 @@ interface Props {
 }
 
 export default async function ProgramDetailPage({ params }: Props) {
-  const { programs, users } = await getServices();
+  const { programId } = await params;
+  
+  const { programs, users, workouts } = await getServices();
 
-  const [program, availableUsers] = await Promise.all([
-    programs.getProgramById(params.programId),
-    users.getRecentUsers()
+  const [program, availableUsers, workoutsDetails] = await Promise.all([
+    programs.getProgramById(programId),
+    users.getRecentUsers(),
+    workouts.getWorkouts()
   ]);
 
   if (!program) {
@@ -22,7 +25,7 @@ export default async function ProgramDetailPage({ params }: Props) {
 
   return (
     <div className="p-6">
-      <ProgramDetailClient program={program} availableUsers={availableUsers} />
+      <ProgramDetailClient program={program} availableUsers={availableUsers} workouts={workoutsDetails} />
     </div>
   );
 }

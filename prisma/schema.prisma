@@ -125,18 +125,18 @@ model Program {
 }
 
 model ProgramWorkout {
-  id        String   @id @default(cuid())
-  program   Program  @relation(fields: [programId], references: [id])
-  programId String
-  workout   Workout  @relation(fields: [workoutId], references: [id])
-  workoutId String
-  weekNumber Int     // Week in the program
-  dayNumber  Int     // Day of the week
-  order     Int      // Order within the day
+  id          String   @id @default(cuid())
+  program     Program  @relation(fields: [programId], references: [id])
+  programId   String
+  workout     Workout  @relation(fields: [workoutId], references: [id])
+  workoutId   String
+  weekNumber  Int
+  dayNumber   Int
+  order       Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
-  @@unique([programId, weekNumber, dayNumber, order])
-  @@index([programId])
-  @@index([workoutId])
+  @@unique([programId, workoutId, weekNumber, dayNumber])
 }
 
 model Workout {

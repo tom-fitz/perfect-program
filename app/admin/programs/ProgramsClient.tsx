@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Search } from 'lucide-react';
 import NewProgramButton from '@/components/programs/NewProgramButton';
 import ProgramList from '@/components/programs/ProgramList';
@@ -25,8 +25,15 @@ export default function ProgramsClient({
   initialPrograms,
   workouts
 }: ProgramsClientProps) {
-  const [programs] = useState(initialPrograms);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [programs, setPrograms] = useState<ProgramWithDetails[]>(initialPrograms);
+const [searchTerm, setSearchTerm] = useState('');
+
+const filteredPrograms = useMemo(() => {
+    return programs.filter(program => 
+      program.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }, [programs, searchTerm]);
+  
 
   return (
     <div className="max-w-6xl mx-auto space-y-6">
@@ -50,7 +57,7 @@ export default function ProgramsClient({
           />
         </div>
 
-        <ProgramList programs={programs} />
+        <ProgramList programs={filteredPrograms} />
       </div>
     </div>
   );

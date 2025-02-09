@@ -18,19 +18,27 @@ export const {
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!
     })
   ],
+  pages: {
+    signIn: '/auth/signin'
+  },
+  session: {
+    strategy: "jwt",
+    maxAge: 30 * 24 * 60 * 60, // 30 days
+  },
+  jwt: {
+    maxAge: 30 * 24 * 60 * 60, // 30 days
+  },
+  secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
-    async session({ session, user }) {
+    async session({ session, token }) {
       return {
         ...session,
         user: {
           ...session.user,
-          id: user.id,
-          isAdmin: validAdmins.includes(user.email ?? '')
+          id: token.sub,
+          isAdmin: validAdmins.includes(session.user?.email ?? '')
         }
       };
     }
-  },
-  pages: {
-    signIn: '/auth/signin'
   }
 });

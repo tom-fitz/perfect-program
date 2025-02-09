@@ -14,12 +14,15 @@ export default function NavigationWrapper() {
   useEffect(() => {
     setMounted(true);
     // Fetch session on client side to avoid hydration mismatch
-    fetch('/api/auth/session')
-      .then((res) => res.json())
-      .then((data) => setSession(data));
+    const fetchSession = async () => {
+      const res = await fetch('/api/auth/session');
+      const data = await res.json();
+      setSession(data);
+    };
+    fetchSession();
   }, []);
 
-  // Don't render anything until after hydration
+  // Don't render navigation until after hydration
   if (!mounted) return null;
 
   return <Navigation session={session} initialPathname={pathname || ''} />;

@@ -39,7 +39,7 @@ export default function NewTemplateModal({
         setAmount('');
         setDescription('');
       } else {
-        setError(result.error);
+        setError(result.error ?? 'create template:unexpected error occurred');
       }
     } catch (err) {
       console.error(err);
