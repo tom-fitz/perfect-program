@@ -45,7 +45,7 @@ export async function assignProgramToUser(programId: string, userId: string) {
 }
 
 export async function updateWorkoutOrder(programId: string, workouts: {
-  id: string;
+  workoutId: string;
   weekNumber: number;
   dayNumber: number;
   order: number;

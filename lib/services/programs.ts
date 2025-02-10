@@ -156,23 +156,30 @@ export class ProgramService extends BaseService {
   }
 
   async updateWorkoutOrder(programId: string, workouts: {
-    id: string;
+    workoutId: string;
     weekNumber: number;
     dayNumber: number;
     order: number;
   }[]) {
     await this.prisma.$transaction(
       workouts.map(workout => 
-        this.prisma.programWorkout.update({
+        this.prisma.programWorkout.upsert({
           where: {
             programId_workoutId_weekNumber_dayNumber: {
               programId,
-              workoutId: workout.id,
+              workoutId: workout.workoutId,
               weekNumber: workout.weekNumber,
               dayNumber: workout.dayNumber
             }
           },
-          data: {
+          update: {
+            order: workout.order
+          },
+          create: {
+            programId,
+            workoutId: workout.workoutId,
+            weekNumber: workout.weekNumber,
+            dayNumber: workout.dayNumber,
             order: workout.order
           }
         })
