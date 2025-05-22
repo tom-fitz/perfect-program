@@ -16,13 +16,14 @@
     "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
   },
   "dependencies": {
-    "@auth/core": "^0.28.0",
-    "@auth/prisma-adapter": "^1.4.0",
+    "@auth/core": "^0.37.4",
+    "@auth/prisma-adapter": "^2.7.4",
     "@prisma/client": "^6.3.0",
     "lucide-react": "^0.474.0",
     "next": "15.1.6",
     "next-auth": "^5.0.0-beta.15",
     "react": "^19.0.0",
+    "react-beautiful-dnd": "^13.1.1",
     "react-dom": "^19.0.0",
     "react-youtube": "^10.1.0",
     "resend": "^4.1.2",
