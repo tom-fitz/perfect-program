@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, ClassAttributes, HTMLAttributes, JSX, JSXElementConstructor, ReactElement, ReactNode, ReactPortal, Ref, ClassAttributes, HTMLAttributes, JSX, Ref } from 'react';
+import { useState, useEffect } from 'react';
 import { Program, User, Workout } from '@prisma/client';
 import { Plus, Save, ChevronUp, ChevronDown } from 'lucide-react';
 import { useRouter } from 'next/navigation';
@@ -8,7 +8,23 @@ import WorkoutSelectorModal from '@/components/programs/WorkoutSelectorModal';
 import { WorkoutWithDetails } from '@/types/workouts';
 import { updateWorkoutOrder } from '@/lib/actions/programs';
 import { toast } from 'sonner';
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  DragEndEvent
+} from '@dnd-kit/core';
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  useSortable,
+  verticalListSortingStrategy
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 
 type ProgramWithDetails = Program & {
   workouts: {
@@ -25,6 +41,14 @@ interface Props {
   availableUsers: User[];
   workouts: WorkoutWithDetails[];
 }
+
+// Add type for workout item
+type WorkoutItem = {
+  workout: Workout;
+  weekNumber: number;
+  dayNumber: number;
+  order: number;
+};
 
 export default function ProgramDetailClient({ program: initialProgram, availableUsers, workouts }: Props) {
   const router = useRouter();
@@ -160,6 +184,76 @@ export default function ProgramDetailClient({ program: initialProgram, available
     return workouts.reduce((total, w) => total + (w.workout.duration || 0), 0);
   };
 
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
+
+  function SortableWorkout({ workout, weekNumber, dayNumber, index, onMove }: {
+    workout: typeof program.workouts[0],
+    weekNumber: number,
+    dayNumber: number,
+    index: number,
+    onMove: (week: number, day: number, currentIndex: number, direction: 'up' | 'down') => void
+  }) {
+    const {
+      attributes,
+      listeners,
+      setNodeRef,
+      transform,
+      transition,
+    } = useSortable({ id: workout.workout.id });
+
+    const style = {
+      transform: CSS.Transform.toString(transform),
+      transition,
+    };
+
+    return (
+      <div
+        ref={setNodeRef}
+        style={style}
+        {...attributes}
+        {...listeners}
+        className="bg-ebony p-1.5 rounded flex flex-col gap-1"
+      >
+        <div className="flex items-center justify-between">
+          <span className="text-sm font-medium">{workout.workout.name}</span>
+          <div className="flex gap-1">
+            <button
+              onClick={() => onMove(weekNumber, dayNumber, index, 'up')}
+              className="opacity-0 group-hover:opacity-100 hover:text-powder"
+              disabled={index === 0}
+            >
+              <ChevronUp className="w-3 h-3" />
+            </button>
+            <button
+              onClick={() => onMove(weekNumber, dayNumber, index, 'down')}
+              className="opacity-0 group-hover:opacity-100 hover:text-powder"
+              disabled={index === -1}
+            >
+              <ChevronDown className="w-3 h-3" />
+            </button>
+          </div>
+        </div>
+        <div className="flex gap-1 flex-wrap">
+          {workout.workout.description && (
+            <span className="text-xs px-1.5 py-0.5 bg-gray-800 text-gray-300">
+              {workout.workout.description}
+            </span>
+          )}
+          {workout.workout.duration && (
+            <span className="text-xs px-1.5 py-0.5 rounded bg-gray-800 text-gray-300">
+              {Math.floor(workout.workout.duration / 60)}:{(workout.workout.duration % 60).toString().padStart(2, '0')}
+            </span>
+          )}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="max-w-7xl mx-auto">
       <div className="flex flex-col gap-2 mb-6">
@@ -201,39 +295,37 @@ export default function ProgramDetailClient({ program: initialProgram, available
           ))}
         </div>
 
-        <DragDropContext
-          onDragEnd={(result: { source: any; destination: any; }) => {
-            const { source, destination } = result;
-            if (!destination) return;
+        <DndContext
+          sensors={sensors}
+          collisionDetection={closestCenter}
+          onDragEnd={(event: DragEndEvent) => {
+            const { active, over } = event;
+            if (!over) return;
 
-            const sourceWeek = parseInt(source.droppableId.split('-')[1]);
-            const sourceDay = parseInt(source.droppableId.split('-')[2]);
-            const destWeek = parseInt(destination.droppableId.split('-')[1]);
-            const destDay = parseInt(destination.droppableId.split('-')[2]);
+            const [sourceWeek, sourceDay] = active.id.toString().split('-').map(Number);
+            const [destWeek, destDay] = over.id.toString().split('-').map(Number);
 
             const sourceWorkouts = program.workouts.filter(
               w => w.weekNumber === sourceWeek && w.dayNumber === sourceDay
-            );
+            ).sort((a, b) => a.order - b.order);
             const destWorkouts = program.workouts.filter(
               w => w.weekNumber === destWeek && w.dayNumber === destDay
-            );
+            ).sort((a, b) => a.order - b.order);
 
-            const [moved] = sourceWorkouts.splice(source.index, 1);
-            destWorkouts.splice(destination.index, 0, moved);
+            const oldIndex = sourceWorkouts.findIndex(w => w.workout.id === active.id);
+            const newIndex = destWorkouts.findIndex(w => w.workout.id === over.id);
 
-            const newWorkouts = program.workouts.map(w => {
-              if (w.weekNumber === sourceWeek && w.dayNumber === sourceDay) {
-                const newIndex = sourceWorkouts.findIndex(dw => dw.workout.id === w.workout.id);
-                return { ...w, order: newIndex };
-              }
-              if (w.weekNumber === destWeek && w.dayNumber === destDay) {
-                const newIndex = destWorkouts.findIndex(dw => dw.workout.id === w.workout.id);
-                return { ...w, order: newIndex };
-              }
-              return w;
-            });
+            const newWorkouts = arrayMove(sourceWorkouts, oldIndex, newIndex).map((w: WorkoutItem, i: number) => ({
+              ...w,
+              weekNumber: destWeek,
+              dayNumber: destDay,
+              order: i,
+            }));
 
-            setProgram(prev => ({ ...prev, workouts: newWorkouts }));
+            setProgram(prev => ({
+              ...prev,
+              workouts: [...prev.workouts.filter(w => !(w.weekNumber === sourceWeek && w.dayNumber === sourceDay)), ...newWorkouts],
+            }));
             setHasChanges(true);
           }}
         >
@@ -247,82 +339,47 @@ export default function ProgramDetailClient({ program: initialProgram, available
                 const totalDuration = calculateDayDuration(dayWorkouts);
 
                 return (
-                  <Droppable droppableId={`week-${week + 1}-day-${((day + 1) % 7 || 7)}`} key={`${week + 1}-${day + 1}`}>
-                    {(provided: { innerRef: Ref<HTMLDivElement> | undefined; droppableProps: JSX.IntrinsicAttributes & ClassAttributes<HTMLDivElement> & HTMLAttributes<HTMLDivElement>; placeholder: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; }) => (
-                      <div
-                        ref={provided.innerRef}
-                        {...provided.droppableProps}
-                        className={`min-h-[120px] p-2 border border-gray-800 relative group ${
-                          getWorkloadClass(dayWorkouts.length)
-                        }`}
-                      >
-                        {totalDuration > 0 && (
-                          <div className="absolute text-l font-bold top-1 left-1 text-gray-400">
-                            {Math.floor(totalDuration / 60)}:{(totalDuration % 60).toString().padStart(2, '0')}
-                          </div>
-                        )}
-                        <button
-                          className="absolute top-1 right-1 opacity-0 group-hover:opacity-100"
-                          onClick={() => setSelectedDay({ week: week + 1, day: ((day + 1) % 7 || 7) })}
-                        >
-                          <Plus className="w-4 h-4 text-gray-400 hover:text-powder" />
-                        </button>
-
-                        <div className="mt-6 space-y-1">
-                          {dayWorkouts.map((workout, index) => (
-                            <Draggable key={workout.workout.id} draggableId={workout.workout.id} index={index}>
-                              {(provided: { innerRef: Ref<HTMLDivElement> | undefined; draggableProps: JSX.IntrinsicAttributes & ClassAttributes<HTMLDivElement> & HTMLAttributes<HTMLDivElement>; dragHandleProps: JSX.IntrinsicAttributes & ClassAttributes<HTMLDivElement> & HTMLAttributes<HTMLDivElement>; }) => (
-                                <div
-                                  ref={provided.innerRef}
-                                  {...provided.draggableProps}
-                                  {...provided.dragHandleProps}
-                                  className="bg-ebony p-1.5 rounded flex flex-col gap-1"
-                                >
-                                  <div className="flex items-center justify-between">
-                                    <span className="text-sm font-medium">{workout.workout.name}</span>
-                                    <div className="flex gap-1">
-                                      <button
-                                        onClick={() => moveWorkout(week + 1, ((day + 1) % 7 || 7), index, 'up')}
-                                        className="opacity-0 group-hover:opacity-100 hover:text-powder"
-                                        disabled={index === 0}
-                                      >
-                                        <ChevronUp className="w-3 h-3" />
-                                      </button>
-                                      <button
-                                        onClick={() => moveWorkout(week + 1, ((day + 1) % 7 || 7), index, 'down')}
-                                        className="opacity-0 group-hover:opacity-100 hover:text-powder"
-                                        disabled={index === dayWorkouts.length - 1}
-                                      >
-                                        <ChevronDown className="w-3 h-3" />
-                                      </button>
-                                    </div>
-                                  </div>
-                                  <div className="flex gap-1 flex-wrap">
-                                    {workout.workout.description && (
-                                      <span className="text-xs px-1.5 py-0.5 bg-gray-800 text-gray-300">
-                                        {workout.workout.description}
-                                      </span>
-                                    )}
-                                    {workout.workout.duration && (
-                                      <span className="text-xs px-1.5 py-0.5 rounded bg-gray-800 text-gray-300">
-                                        {Math.floor(workout.workout.duration / 60)}:{(workout.workout.duration % 60).toString().padStart(2, '0')}
-                                      </span>
-                                    )}
-                                  </div>
-                                </div>
-                              )}
-                            </Draggable>
-                          ))}
-                          {provided.placeholder}
+                  <SortableContext
+                    key={`${week + 1}-${day + 1}`}
+                    items={dayWorkouts.map(w => w.workout.id)}
+                    strategy={verticalListSortingStrategy}
+                  >
+                    <div
+                      className={`min-h-[120px] p-2 border border-gray-800 relative group ${
+                        getWorkloadClass(dayWorkouts.length)
+                      }`}
+                    >
+                      {totalDuration > 0 && (
+                        <div className="absolute text-l font-bold top-1 left-1 text-gray-400">
+                          {Math.floor(totalDuration / 60)}:{(totalDuration % 60).toString().padStart(2, '0')}
                         </div>
+                      )}
+                      <button
+                        className="absolute top-1 right-1 opacity-0 group-hover:opacity-100"
+                        onClick={() => setSelectedDay({ week: week + 1, day: ((day + 1) % 7 || 7) })}
+                      >
+                        <Plus className="w-4 h-4 text-gray-400 hover:text-powder" />
+                      </button>
+
+                      <div className="mt-6 space-y-1">
+                        {dayWorkouts.map((workout, index) => (
+                          <SortableWorkout
+                            key={workout.workout.id}
+                            workout={workout}
+                            weekNumber={week + 1}
+                            dayNumber={((day + 1) % 7 || 7)}
+                            index={index}
+                            onMove={moveWorkout}
+                          />
+                        ))}
                       </div>
-                    )}
-                  </Droppable>
+                    </div>
+                  </SortableContext>
                 );
               })}
             </div>
           ))}
-        </DragDropContext>
+        </DndContext>
       </div>
 
       {selectedDay && (
