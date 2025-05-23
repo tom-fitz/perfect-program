@@ -44,12 +44,15 @@ export async function assignProgramToUser(programId: string, userId: string) {
   }
 }
 
-export async function updateWorkoutOrder(programId: string, workouts: {
-  workoutId: string;
-  weekNumber: number;
-  dayNumber: number;
-  order: number;
-}[]) {
+export async function updateWorkoutOrder(
+  programId: string,
+  workouts: {
+    workoutId: string;
+    weekNumber: number;
+    dayNumber: number;
+    order: number;
+  }[]
+) {
   try {
     const { programs } = await getServices();
     await programs.updateWorkoutOrder(programId, workouts);
@@ -58,17 +61,23 @@ export async function updateWorkoutOrder(programId: string, workouts: {
   } catch (error: Error | unknown) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Failed to update workout order'
+      error:
+        error instanceof Error
+          ? error.message
+          : 'Failed to update workout order'
     };
   }
 }
 
-export async function addWorkoutToProgram(programId: string, data: {
-  workoutId: string;
-  weekNumber: number;
-  dayNumber: number;
-  order: number;
-}) {
+export async function addWorkoutToProgram(
+  programId: string,
+  data: {
+    workoutId: string;
+    weekNumber: number;
+    dayNumber: number;
+    order: number;
+  }
+) {
   try {
     const { programs } = await getServices();
     await programs.addWorkoutToProgram(programId, data);

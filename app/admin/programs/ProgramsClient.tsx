@@ -25,15 +25,14 @@ export default function ProgramsClient({
   initialPrograms,
   workouts
 }: ProgramsClientProps) {
-  const [programs, setPrograms] = useState<ProgramWithDetails[]>(initialPrograms);
-const [searchTerm, setSearchTerm] = useState('');
+  const [programs] = useState<ProgramWithDetails[]>(initialPrograms);
+  const [searchTerm, setSearchTerm] = useState('');
 
-const filteredPrograms = useMemo(() => {
-    return programs.filter(program => 
+  const filteredPrograms = useMemo(() => {
+    return programs.filter((program) =>
       program.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
   }, [programs, searchTerm]);
-  
 
   return (
     <div className="max-w-6xl mx-auto space-y-6">

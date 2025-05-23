@@ -17,22 +17,18 @@ export const authConfig = {
     //   const isOnPublic = nextUrl.pathname.startsWith('/public');
     //   const isOnAuth = nextUrl.pathname.startsWith('/auth');
     //   const isOnApp = nextUrl.pathname.startsWith('/app');
-
     //   // Allow public pages
     //   if (isOnPublic) return true;
-
     //   // Redirect to home if logged-in user tries to access auth pages
     //   if (isOnAuth) {
     //     if (isLoggedIn) return Response.redirect(new URL('/', nextUrl));
     //     return true;
     //   }
-
     //   // Protect /app routes
     //   if (isOnApp) {
     //     if (!isLoggedIn) return false;
     //     return true;
     //   }
-
     //   // Allow all other routes
     //   return true;
     // }

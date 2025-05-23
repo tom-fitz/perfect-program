@@ -14,5 +14,7 @@ export default async function AdminWorkoutsPage() {
     exercises.getExercises()
   ]);
 
-  return <WorkoutsClient workouts={allWorkouts} exercises={availableExercises} />;
+  return (
+    <WorkoutsClient workouts={allWorkouts} exercises={availableExercises} />
+  );
 }

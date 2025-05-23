@@ -40,7 +40,7 @@ export default function NewProgramButton({ workouts }: NewProgramButtonProps) {
   };
 
   const addWorkout = () => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       workouts: [
         ...prev.workouts,
@@ -55,7 +55,7 @@ export default function NewProgramButton({ workouts }: NewProgramButtonProps) {
   };
 
   const removeWorkout = (index: number) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       workouts: prev.workouts.filter((_, i) => i !== index)
     }));
@@ -88,7 +88,7 @@ export default function NewProgramButton({ workouts }: NewProgramButtonProps) {
                   type="text"
                   value={formData.name}
                   onChange={(e) =>
-                    setFormData(prev => ({ ...prev, name: e.target.value }))
+                    setFormData((prev) => ({ ...prev, name: e.target.value }))
                   }
                   className="w-full p-2 bg-black/20 border border-gray-800 rounded text-powder"
                   required
@@ -96,11 +96,16 @@ export default function NewProgramButton({ workouts }: NewProgramButtonProps) {
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-1">Description</label>
+                <label className="block text-sm font-medium mb-1">
+                  Description
+                </label>
                 <textarea
                   value={formData.description}
                   onChange={(e) =>
-                    setFormData(prev => ({ ...prev, description: e.target.value }))
+                    setFormData((prev) => ({
+                      ...prev,
+                      description: e.target.value
+                    }))
                   }
                   className="w-full p-2 bg-black/20 border border-gray-800 rounded text-powder"
                   rows={3}
@@ -116,7 +121,10 @@ export default function NewProgramButton({ workouts }: NewProgramButtonProps) {
                     type="number"
                     value={formData.duration}
                     onChange={(e) =>
-                      setFormData(prev => ({ ...prev, duration: parseInt(e.target.value) }))
+                      setFormData((prev) => ({
+                        ...prev,
+                        duration: parseInt(e.target.value)
+                      }))
                     }
                     min={1}
                     max={52}
@@ -131,7 +139,10 @@ export default function NewProgramButton({ workouts }: NewProgramButtonProps) {
                   <select
                     value={formData.difficulty}
                     onChange={(e) =>
-                      setFormData(prev => ({ ...prev, difficulty: e.target.value as Difficulty }))
+                      setFormData((prev) => ({
+                        ...prev,
+                        difficulty: e.target.value as Difficulty
+                      }))
                     }
                     className="w-full p-2 bg-black/20 border border-gray-800 rounded text-powder"
                   >
@@ -168,7 +179,7 @@ export default function NewProgramButton({ workouts }: NewProgramButtonProps) {
                                 ...workout,
                                 workoutId: e.target.value
                               };
-                              setFormData(prev => ({
+                              setFormData((prev) => ({
                                 ...prev,
                                 workouts: newWorkouts
                               }));
@@ -194,7 +205,7 @@ export default function NewProgramButton({ workouts }: NewProgramButtonProps) {
                                 ...workout,
                                 weekNumber: parseInt(e.target.value)
                               };
-                              setFormData(prev => ({
+                              setFormData((prev) => ({
                                 ...prev,
                                 workouts: newWorkouts
                               }));
@@ -216,7 +227,7 @@ export default function NewProgramButton({ workouts }: NewProgramButtonProps) {
                                 ...workout,
                                 dayNumber: parseInt(e.target.value)
                               };
-                              setFormData(prev => ({
+                              setFormData((prev) => ({
                                 ...prev,
                                 workouts: newWorkouts
                               }));

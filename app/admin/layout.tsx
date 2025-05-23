@@ -8,7 +8,7 @@ export default async function AdminLayout({
   children: React.ReactNode;
 }) {
   const session = await auth();
-  
+
   if (!session?.user?.email || session.user.email !== 'tpfitz42@gmail.com') {
     redirect('/app');
   }
@@ -16,9 +16,7 @@ export default async function AdminLayout({
   return (
     <div className="flex">
       <AdminSidebar />
-      <div className="ml-80 flex-1 p-8">
-        {children}
-      </div>
+      <div className="ml-80 flex-1 p-8">{children}</div>
     </div>
   );
 }

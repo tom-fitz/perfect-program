@@ -2,15 +2,13 @@
 
 import { useRouter } from 'next/navigation';
 import NewWorkoutButton from '@/components/workouts/NewWorkoutButton';
-import { Exercise, Workout } from '@prisma/client';
-import { WorkoutWithDetails } from '@/types/workouts';
+import { Exercise } from '@prisma/client';
 
 type WorkoutsClientProps = {
-  workouts: WorkoutWithDetails[];
   exercises: Exercise[];
 };
 
-export default function WorkoutsClient({ workouts, exercises }: WorkoutsClientProps) {
+export default function WorkoutsClient({ exercises }: WorkoutsClientProps) {
   const router = useRouter();
 
   return (
@@ -23,11 +21,11 @@ export default function WorkoutsClient({ workouts, exercises }: WorkoutsClientPr
               Create and manage workout templates for your programs
             </p>
           </div>
-          <NewWorkoutButton 
-            exercises={exercises} 
+          <NewWorkoutButton
+            exercises={exercises}
             onWorkoutCreated={() => {
               router.refresh();
-            }} 
+            }}
           />
         </div>
       </div>

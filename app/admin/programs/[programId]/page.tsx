@@ -10,7 +10,7 @@ interface Props {
 
 export default async function ProgramDetailPage({ params }: Props) {
   const { programId } = await params;
-  
+
   const { programs, users, workouts } = await getServices();
 
   const [program, availableUsers, workoutsDetails] = await Promise.all([
@@ -19,13 +19,15 @@ export default async function ProgramDetailPage({ params }: Props) {
     workouts.getWorkouts()
   ]);
 
+  console.log('available users', availableUsers);
+
   if (!program) {
     notFound();
   }
 
   return (
     <div className="p-6">
-      <ProgramDetailClient program={program} availableUsers={availableUsers} workouts={workoutsDetails} />
+      <ProgramDetailClient program={program} workouts={workoutsDetails} />
     </div>
   );
 }

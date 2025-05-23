@@ -15,7 +15,9 @@ export default function WorkoutSelectorModal({
   onSelect,
   onClose
 }: WorkoutSelectorModalProps) {
-  const [selectedWorkouts, setSelectedWorkouts] = useState<Set<string>>(new Set());
+  const [selectedWorkouts, setSelectedWorkouts] = useState<Set<string>>(
+    new Set()
+  );
   const [searchQuery, setSearchQuery] = useState('');
 
   const handleSelect = async () => {
@@ -34,9 +36,10 @@ export default function WorkoutSelectorModal({
     setSelectedWorkouts(newSelected);
   };
 
-  const filteredWorkouts = workouts.filter(workout =>
-    workout.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    workout.description?.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredWorkouts = workouts.filter(
+    (workout) =>
+      workout.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      workout.description?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
@@ -50,7 +53,10 @@ export default function WorkoutSelectorModal({
         </div>
 
         <div className="relative mb-4">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
+          <Search
+            className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+            size={20}
+          />
           <input
             type="text"
             placeholder="Search workouts..."
@@ -77,7 +83,9 @@ export default function WorkoutSelectorModal({
                   <Check className="text-sunglow ml-2" size={18} />
                 )}
               </div>
-              <p className="text-sm text-gray-400 mt-1 line-clamp-2">{workout.description}</p>
+              <p className="text-sm text-gray-400 mt-1 line-clamp-2">
+                {workout.description}
+              </p>
             </div>
           ))}
           {filteredWorkouts.length === 0 && (
@@ -105,4 +113,4 @@ export default function WorkoutSelectorModal({
       </div>
     </div>
   );
-} 
+}

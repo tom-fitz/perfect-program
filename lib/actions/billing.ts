@@ -16,7 +16,8 @@ export async function createBillingTemplate(data: {
   } catch (error: Error | unknown) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Failed to create template'
+      error:
+        error instanceof Error ? error.message : 'Failed to create template'
     };
   }
 }

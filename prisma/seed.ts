@@ -93,7 +93,9 @@ async function main() {
         bodyPartId: bodyParts[2].id,
         typeId: types[0].id,
         difficulty: 'INTERMEDIATE',
-        equipment: { connect: [{ id: equipment[1].id }, { id: equipment[4].id }] }
+        equipment: {
+          connect: [{ id: equipment[1].id }, { id: equipment[4].id }]
+        }
       }
     }),
     prisma.exercise.create({
@@ -117,7 +119,9 @@ async function main() {
         bodyPartId: bodyParts[4].id,
         typeId: types[0].id,
         difficulty: 'BEGINNER',
-        equipment: { connect: [{ id: equipment[0].id }, { id: equipment[2].id }] }
+        equipment: {
+          connect: [{ id: equipment[0].id }, { id: equipment[2].id }]
+        }
       }
     }),
     prisma.exercise.create({
@@ -193,9 +197,27 @@ async function main() {
         createdById: admin.id,
         exercises: {
           create: [
-            { exerciseId: exercises[0].id, sets: 4, reps: 8, order: 0, restPeriod: 90 },
-            { exerciseId: exercises[1].id, sets: 3, reps: 10, order: 1, restPeriod: 120 },
-            { exerciseId: exercises[3].id, sets: 3, reps: 12, order: 2, restPeriod: 60 }
+            {
+              exerciseId: exercises[0].id,
+              sets: 4,
+              reps: 8,
+              order: 0,
+              restPeriod: 90
+            },
+            {
+              exerciseId: exercises[1].id,
+              sets: 3,
+              reps: 10,
+              order: 1,
+              restPeriod: 120
+            },
+            {
+              exerciseId: exercises[3].id,
+              sets: 3,
+              reps: 12,
+              order: 2,
+              restPeriod: 60
+            }
           ]
         }
       }
@@ -209,9 +231,27 @@ async function main() {
         createdById: admin.id,
         exercises: {
           create: [
-            { exerciseId: exercises[2].id, sets: 5, reps: 5, order: 0, restPeriod: 180 },
-            { exerciseId: exercises[6].id, sets: 3, reps: 8, order: 1, restPeriod: 150 },
-            { exerciseId: exercises[9].id, sets: 4, reps: 15, order: 2, restPeriod: 60 }
+            {
+              exerciseId: exercises[2].id,
+              sets: 5,
+              reps: 5,
+              order: 0,
+              restPeriod: 180
+            },
+            {
+              exerciseId: exercises[6].id,
+              sets: 3,
+              reps: 8,
+              order: 1,
+              restPeriod: 150
+            },
+            {
+              exerciseId: exercises[9].id,
+              sets: 4,
+              reps: 15,
+              order: 2,
+              restPeriod: 60
+            }
           ]
         }
       }
@@ -225,9 +265,27 @@ async function main() {
         createdById: admin.id,
         exercises: {
           create: [
-            { exerciseId: exercises[5].id, sets: 3, duration: 60, order: 0, restPeriod: 45 },
-            { exerciseId: exercises[8].id, sets: 3, reps: 15, order: 1, restPeriod: 30 },
-            { exerciseId: exercises[7].id, sets: 3, reps: 12, order: 2, restPeriod: 45 }
+            {
+              exerciseId: exercises[5].id,
+              sets: 3,
+              duration: 60,
+              order: 0,
+              restPeriod: 45
+            },
+            {
+              exerciseId: exercises[8].id,
+              sets: 3,
+              reps: 15,
+              order: 1,
+              restPeriod: 30
+            },
+            {
+              exerciseId: exercises[7].id,
+              sets: 3,
+              reps: 12,
+              order: 2,
+              restPeriod: 45
+            }
           ]
         }
       }
@@ -241,9 +299,27 @@ async function main() {
         createdById: admin.id,
         exercises: {
           create: [
-            { exerciseId: exercises[9].id, sets: 5, reps: 20, order: 0, restPeriod: 30 },
-            { exerciseId: exercises[7].id, sets: 4, reps: 15, order: 1, restPeriod: 30 },
-            { exerciseId: exercises[5].id, sets: 4, duration: 45, order: 2, restPeriod: 30 }
+            {
+              exerciseId: exercises[9].id,
+              sets: 5,
+              reps: 20,
+              order: 0,
+              restPeriod: 30
+            },
+            {
+              exerciseId: exercises[7].id,
+              sets: 4,
+              reps: 15,
+              order: 1,
+              restPeriod: 30
+            },
+            {
+              exerciseId: exercises[5].id,
+              sets: 4,
+              duration: 45,
+              order: 2,
+              restPeriod: 30
+            }
           ]
         }
       }
@@ -257,10 +333,34 @@ async function main() {
         createdById: admin.id,
         exercises: {
           create: [
-            { exerciseId: exercises[0].id, sets: 3, reps: 10, order: 0, restPeriod: 90 },
-            { exerciseId: exercises[2].id, sets: 3, reps: 10, order: 1, restPeriod: 90 },
-            { exerciseId: exercises[6].id, sets: 3, reps: 8, order: 2, restPeriod: 120 },
-            { exerciseId: exercises[3].id, sets: 3, reps: 12, order: 3, restPeriod: 60 }
+            {
+              exerciseId: exercises[0].id,
+              sets: 3,
+              reps: 10,
+              order: 0,
+              restPeriod: 90
+            },
+            {
+              exerciseId: exercises[2].id,
+              sets: 3,
+              reps: 10,
+              order: 1,
+              restPeriod: 90
+            },
+            {
+              exerciseId: exercises[6].id,
+              sets: 3,
+              reps: 8,
+              order: 2,
+              restPeriod: 120
+            },
+            {
+              exerciseId: exercises[3].id,
+              sets: 3,
+              reps: 12,
+              order: 3,
+              restPeriod: 60
+            }
           ]
         }
       }

@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react';
 import { Program, User, Workout } from '@prisma/client';
 import { Plus, Save, ChevronUp, ChevronDown } from 'lucide-react';
-import { useRouter } from 'next/navigation';
 import WorkoutSelectorModal from '@/components/programs/WorkoutSelectorModal';
 import { WorkoutWithDetails } from '@/types/workouts';
 import { updateWorkoutOrder } from '@/lib/actions/programs';
@@ -38,7 +37,6 @@ type ProgramWithDetails = Program & {
 
 interface Props {
   program: ProgramWithDetails;
-  availableUsers: User[];
   workouts: WorkoutWithDetails[];
 }
 
@@ -50,10 +48,15 @@ type WorkoutItem = {
   order: number;
 };
 
-export default function ProgramDetailClient({ program: initialProgram, availableUsers, workouts }: Props) {
-  const router = useRouter();
+export default function ProgramDetailClient({
+  program: initialProgram,
+  workouts
+}: Props) {
   const [program, setProgram] = useState(initialProgram);
-  const [selectedDay, setSelectedDay] = useState<{week: number, day: number} | null>(null);
+  const [selectedDay, setSelectedDay] = useState<{
+    week: number;
+    day: number;
+  } | null>(null);
   const [hasChanges, setHasChanges] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
 
@@ -83,15 +86,20 @@ export default function ProgramDetailClient({ program: initialProgram, available
     return () => window.removeEventListener('beforeunload', handleBeforeUnload);
   }, [hasChanges]);
 
-  const moveWorkout = (weekNumber: number, dayNumber: number, currentIndex: number, direction: 'up' | 'down') => {
+  const moveWorkout = (
+    weekNumber: number,
+    dayNumber: number,
+    currentIndex: number,
+    direction: 'up' | 'down'
+  ) => {
     const newIndex = direction === 'up' ? currentIndex - 1 : currentIndex + 1;
-    const dayWorkouts = program.workouts.filter(
-      w => w.weekNumber === weekNumber && w.dayNumber === dayNumber
-    ).sort((a, b) => a.order - b.order);
+    const dayWorkouts = program.workouts
+      .filter((w) => w.weekNumber === weekNumber && w.dayNumber === dayNumber)
+      .sort((a, b) => a.order - b.order);
 
     if (newIndex < 0 || newIndex >= dayWorkouts.length) return;
 
-    const newWorkouts = program.workouts.map(w => {
+    const newWorkouts = program.workouts.map((w) => {
       if (w.weekNumber === weekNumber && w.dayNumber === dayNumber) {
         if (w.order === currentIndex) return { ...w, order: newIndex };
         if (w.order === newIndex) return { ...w, order: currentIndex };
@@ -99,7 +107,7 @@ export default function ProgramDetailClient({ program: initialProgram, available
       return w;
     });
 
-    setProgram(prev => ({ ...prev, workouts: newWorkouts }));
+    setProgram((prev) => ({ ...prev, workouts: newWorkouts }));
     setHasChanges(true);
   };
 
@@ -107,43 +115,48 @@ export default function ProgramDetailClient({ program: initialProgram, available
     if (!selectedDay) return;
 
     const currentDayWorkouts = program.workouts.filter(
-      w => w.weekNumber === selectedDay.week && w.dayNumber === selectedDay.day
+      (w) =>
+        w.weekNumber === selectedDay.week && w.dayNumber === selectedDay.day
     );
 
     // Remove any existing workouts for the selected workoutIds
-    const filteredWorkouts = program.workouts.filter(w => 
-      !(w.weekNumber === selectedDay.week && 
-        w.dayNumber === selectedDay.day && 
-        workoutIds.includes(w.workout.id))
+    const filteredWorkouts = program.workouts.filter(
+      (w) =>
+        !(
+          w.weekNumber === selectedDay.week &&
+          w.dayNumber === selectedDay.day &&
+          workoutIds.includes(w.workout.id)
+        )
     );
 
-    const maxOrder = currentDayWorkouts.length > 0 
-      ? Math.max(...currentDayWorkouts.map(w => w.order))
-      : -1;
+    const maxOrder =
+      currentDayWorkouts.length > 0
+        ? Math.max(...currentDayWorkouts.map((w) => w.order))
+        : -1;
 
     const newWorkouts = [
       ...filteredWorkouts,
       ...workoutIds.map((id, index) => ({
-        workout: workouts.find(w => w.id === id)!,
+        workout: workouts.find((w) => w.id === id)!,
         weekNumber: selectedDay.week,
         dayNumber: selectedDay.day,
         order: maxOrder + 1 + index
       }))
     ];
 
-    setProgram(prev => ({ ...prev, workouts: newWorkouts }));
+    setProgram((prev) => ({ ...prev, workouts: newWorkouts }));
     setHasChanges(true);
     setSelectedDay(null);
   };
 
   const handleSave = async () => {
     if (isSaving) return;
-    
+
     setIsSaving(true);
     try {
       const result = await updateWorkoutOrder(
         program.id,
-        program.workouts.map(w => ({
+        program.workouts.map((w) => ({
           workoutId: w.workout.id,
           weekNumber: w.weekNumber,
           dayNumber: w.dayNumber,
@@ -187,28 +200,34 @@ export default function ProgramDetailClient({ program: initialProgram, available
   const sensors = useSensors(
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, {
-      coordinateGetter: sortableKeyboardCoordinates,
+      coordinateGetter: sortableKeyboardCoordinates
     })
   );
 
-  function SortableWorkout({ workout, weekNumber, dayNumber, index, onMove }: {
-    workout: typeof program.workouts[0],
-    weekNumber: number,
-    dayNumber: number,
-    index: number,
-    onMove: (week: number, day: number, currentIndex: number, direction: 'up' | 'down') => void
+  function SortableWorkout({
+    workout,
+    weekNumber,
+    dayNumber,
+    index,
+    onMove
+  }: {
+    workout: (typeof program.workouts)[0];
+    weekNumber: number;
+    dayNumber: number;
+    index: number;
+    onMove: (
+      week: number,
+      day: number,
+      currentIndex: number,
+      direction: 'up' | 'down'
+    ) => void;
   }) {
-    const {
-      attributes,
-      listeners,
-      setNodeRef,
-      transform,
-      transition,
-    } = useSortable({ id: workout.workout.id });
+    const { attributes, listeners, setNodeRef, transform, transition } =
+      useSortable({ id: workout.workout.id });
 
     const style = {
       transform: CSS.Transform.toString(transform),
-      transition,
+      transition
     };
 
     return (
@@ -246,7 +265,8 @@ export default function ProgramDetailClient({ program: initialProgram, available
           )}
           {workout.workout.duration && (
             <span className="text-xs px-1.5 py-0.5 rounded bg-gray-800 text-gray-300">
-              {Math.floor(workout.workout.duration / 60)}:{(workout.workout.duration % 60).toString().padStart(2, '0')}
+              {Math.floor(workout.workout.duration / 60)}:
+              {(workout.workout.duration % 60).toString().padStart(2, '0')}
             </span>
           )}
         </div>
@@ -268,7 +288,7 @@ export default function ProgramDetailClient({ program: initialProgram, available
         <p className="text-powder/80">{program.description}</p>
         {hasChanges && (
           <div className="flex items-center gap-2">
-            <button 
+            <button
               onClick={handleSave}
               disabled={isSaving}
               className={`px-4 py-2 bg-sunglow hover:bg-sunglow/90 text-ebony rounded-lg flex items-center gap-2 transition-colors ${
@@ -278,7 +298,7 @@ export default function ProgramDetailClient({ program: initialProgram, available
               <Save className="w-4 h-4" />
               {isSaving ? 'Saving...' : 'Save Changes'}
             </button>
-            <button 
+            <button
               onClick={handleReset}
               className="px-4 py-2 bg-gray-800 hover:bg-gray-700 text-powder rounded-lg flex items-center gap-2 transition-colors"
             >
@@ -290,8 +310,10 @@ export default function ProgramDetailClient({ program: initialProgram, available
 
       <div className="bg-ebony rounded-lg overflow-hidden">
         <div className="grid grid-cols-7 border-b border-gray-800">
-          {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
-            <div key={day} className="p-3 text-sm font-medium text-center">{day}</div>
+          {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => (
+            <div key={day} className="p-3 text-sm font-medium text-center">
+              {day}
+            </div>
           ))}
         </div>
 
@@ -302,29 +324,53 @@ export default function ProgramDetailClient({ program: initialProgram, available
             const { active, over } = event;
             if (!over) return;
 
-            const [sourceWeek, sourceDay] = active.id.toString().split('-').map(Number);
-            const [destWeek, destDay] = over.id.toString().split('-').map(Number);
+            const [sourceWeek, sourceDay] = active.id
+              .toString()
+              .split('-')
+              .map(Number);
+            const [destWeek, destDay] = over.id
+              .toString()
+              .split('-')
+              .map(Number);
 
-            const sourceWorkouts = program.workouts.filter(
-              w => w.weekNumber === sourceWeek && w.dayNumber === sourceDay
-            ).sort((a, b) => a.order - b.order);
-            const destWorkouts = program.workouts.filter(
-              w => w.weekNumber === destWeek && w.dayNumber === destDay
-            ).sort((a, b) => a.order - b.order);
+            const sourceWorkouts = program.workouts
+              .filter(
+                (w) => w.weekNumber === sourceWeek && w.dayNumber === sourceDay
+              )
+              .sort((a, b) => a.order - b.order);
+            const destWorkouts = program.workouts
+              .filter(
+                (w) => w.weekNumber === destWeek && w.dayNumber === destDay
+              )
+              .sort((a, b) => a.order - b.order);
 
-            const oldIndex = sourceWorkouts.findIndex(w => w.workout.id === active.id);
-            const newIndex = destWorkouts.findIndex(w => w.workout.id === over.id);
+            const oldIndex = sourceWorkouts.findIndex(
+              (w) => w.workout.id === active.id
+            );
+            const newIndex = destWorkouts.findIndex(
+              (w) => w.workout.id === over.id
+            );
 
-            const newWorkouts = arrayMove(sourceWorkouts, oldIndex, newIndex).map((w: WorkoutItem, i: number) => ({
+            const newWorkouts = arrayMove(
+              sourceWorkouts,
+              oldIndex,
+              newIndex
+            ).map((w: WorkoutItem, i: number) => ({
               ...w,
               weekNumber: destWeek,
               dayNumber: destDay,
-              order: i,
+              order: i
             }));
 
-            setProgram(prev => ({
+            setProgram((prev) => ({
               ...prev,
-              workouts: [...prev.workouts.filter(w => !(w.weekNumber === sourceWeek && w.dayNumber === sourceDay)), ...newWorkouts],
+              workouts: [
+                ...prev.workouts.filter(
+                  (w) =>
+                    !(w.weekNumber === sourceWeek && w.dayNumber === sourceDay)
+                ),
+                ...newWorkouts
+              ]
             }));
             setHasChanges(true);
           }}
@@ -332,31 +378,41 @@ export default function ProgramDetailClient({ program: initialProgram, available
           {Array.from({ length: program.duration }).map((_, week) => (
             <div key={`week-${week}`} className="grid grid-cols-7">
               {Array.from({ length: 7 }).map((_, day) => {
-                const dayWorkouts = program.workouts.filter(
-                  w => w.weekNumber === week + 1 && w.dayNumber === ((day + 1) % 7 || 7)
-                ).sort((a, b) => a.order - b.order);
+                const dayWorkouts = program.workouts
+                  .filter(
+                    (w) =>
+                      w.weekNumber === week + 1 &&
+                      w.dayNumber === ((day + 1) % 7 || 7)
+                  )
+                  .sort((a, b) => a.order - b.order);
 
                 const totalDuration = calculateDayDuration(dayWorkouts);
 
                 return (
                   <SortableContext
                     key={`${week + 1}-${day + 1}`}
-                    items={dayWorkouts.map(w => w.workout.id)}
+                    items={dayWorkouts.map((w) => w.workout.id)}
                     strategy={verticalListSortingStrategy}
                   >
                     <div
-                      className={`min-h-[120px] p-2 border border-gray-800 relative group ${
-                        getWorkloadClass(dayWorkouts.length)
-                      }`}
+                      className={`min-h-[120px] p-2 border border-gray-800 relative group ${getWorkloadClass(
+                        dayWorkouts.length
+                      )}`}
                     >
                       {totalDuration > 0 && (
                         <div className="absolute text-l font-bold top-1 left-1 text-gray-400">
-                          {Math.floor(totalDuration / 60)}:{(totalDuration % 60).toString().padStart(2, '0')}
+                          {Math.floor(totalDuration / 60)}:
+                          {(totalDuration % 60).toString().padStart(2, '0')}
                         </div>
                       )}
                       <button
                         className="absolute top-1 right-1 opacity-0 group-hover:opacity-100"
-                        onClick={() => setSelectedDay({ week: week + 1, day: ((day + 1) % 7 || 7) })}
+                        onClick={() =>
+                          setSelectedDay({
+                            week: week + 1,
+                            day: (day + 1) % 7 || 7
+                          })
+                        }
                       >
                         <Plus className="w-4 h-4 text-gray-400 hover:text-powder" />
                       </button>
@@ -367,7 +423,7 @@ export default function ProgramDetailClient({ program: initialProgram, available
                             key={workout.workout.id}
                             workout={workout}
                             weekNumber={week + 1}
-                            dayNumber={((day + 1) % 7 || 7)}
+                            dayNumber={(day + 1) % 7 || 7}
                             index={index}
                             onMove={moveWorkout}
                           />

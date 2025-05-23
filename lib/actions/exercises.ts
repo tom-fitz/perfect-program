@@ -22,7 +22,8 @@ export async function createExercise(data: {
   } catch (error: Error | unknown) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Failed to create exercise'
+      error:
+        error instanceof Error ? error.message : 'Failed to create exercise'
     };
   }
 }

@@ -155,14 +155,17 @@ export class ProgramService extends BaseService {
     });
   }
 
-  async updateWorkoutOrder(programId: string, workouts: {
-    workoutId: string;
-    weekNumber: number;
-    dayNumber: number;
-    order: number;
-  }[]) {
+  async updateWorkoutOrder(
+    programId: string,
+    workouts: {
+      workoutId: string;
+      weekNumber: number;
+      dayNumber: number;
+      order: number;
+    }[]
+  ) {
     await this.prisma.$transaction(
-      workouts.map(workout => 
+      workouts.map((workout) =>
         this.prisma.programWorkout.upsert({
           where: {
             programId_workoutId_weekNumber_dayNumber: {
@@ -187,12 +190,15 @@ export class ProgramService extends BaseService {
     );
   }
 
-  async addWorkoutToProgram(programId: string, data: {
-    workoutId: string;
-    weekNumber: number;
-    dayNumber: number;
-    order: number;
-  }) {
+  async addWorkoutToProgram(
+    programId: string,
+    data: {
+      workoutId: string;
+      weekNumber: number;
+      dayNumber: number;
+      order: number;
+    }
+  ) {
     return this.prisma.programWorkout.create({
       data: {
         programId,
