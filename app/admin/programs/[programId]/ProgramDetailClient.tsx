@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Program, User, Workout } from '@prisma/client';
 import { Plus, Save, ChevronUp, ChevronDown } from 'lucide-react';
 import WorkoutSelectorModal from '@/components/programs/WorkoutSelectorModal';
@@ -40,18 +40,7 @@ interface Props {
   workouts: WorkoutWithDetails[];
 }
 
-// Add type for workout item
-type WorkoutItem = {
-  workout: Workout;
-  weekNumber: number;
-  dayNumber: number;
-  order: number;
-};
-
-export default function ProgramDetailClient({
-  program: initialProgram,
-  workouts
-}: Props) {
+export default function ProgramDetailClient({ program: initialProgram, workouts }: Props) {
   const [program, setProgram] = useState(initialProgram);
   const [selectedDay, setSelectedDay] = useState<{
     week: number;
@@ -59,6 +48,35 @@ export default function ProgramDetailClient({
   } | null>(null);
   const [hasChanges, setHasChanges] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+
+  const handleSave = useCallback(async () => {
+    if (isSaving) return;
+
+    setIsSaving(true);
+    try {
+      const result = await updateWorkoutOrder(
+        program.id,
+        program.workouts.map((w) => ({
+          workoutId: w.workout.id,
+          weekNumber: w.weekNumber,
+          dayNumber: w.dayNumber,
+          order: w.order
+        }))
+      );
+
+      if (result.success) {
+        setHasChanges(false);
+        toast.success('Changes saved successfully');
+      } else {
+        toast.error('Failed to save changes: ' + result.error);
+      }
+    } catch (error) {
+      toast.error('Error saving changes');
+      console.error('Error saving changes:', error);
+    } finally {
+      setIsSaving(false);
+    }
+  }, [program.id, program.workouts, isSaving]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -72,7 +90,7 @@ export default function ProgramDetailClient({
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [hasChanges, isSaving]);
+  }, [hasChanges, isSaving, handleSave]);
 
   useEffect(() => {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
@@ -147,35 +165,6 @@ export default function ProgramDetailClient({
     setProgram((prev) => ({ ...prev, workouts: newWorkouts }));
     setHasChanges(true);
     setSelectedDay(null);
-  };
-
-  const handleSave = async () => {
-    if (isSaving) return;
-
-    setIsSaving(true);
-    try {
-      const result = await updateWorkoutOrder(
-        program.id,
-        program.workouts.map((w) => ({
-          workoutId: w.workout.id,
-          weekNumber: w.weekNumber,
-          dayNumber: w.dayNumber,
-          order: w.order
-        }))
-      );
-
-      if (result.success) {
-        setHasChanges(false);
-        toast.success('Changes saved successfully');
-      } else {
-        toast.error('Failed to save changes: ' + result.error);
-      }
-    } catch (error) {
-      toast.error('Error saving changes');
-      console.error('Error saving changes:', error);
-    } finally {
-      setIsSaving(false);
-    }
   };
 
   const handleReset = () => {
@@ -355,7 +344,7 @@ export default function ProgramDetailClient({
               sourceWorkouts,
               oldIndex,
               newIndex
-            ).map((w: WorkoutItem, i: number) => ({
+            ).map((w, i) => ({
               ...w,
               weekNumber: destWeek,
               dayNumber: destDay,

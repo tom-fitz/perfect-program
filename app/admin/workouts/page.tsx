@@ -9,12 +9,11 @@ export const metadata: Metadata = {
 
 export default async function AdminWorkoutsPage() {
   const { workouts, exercises } = await getServices();
-  const [allWorkouts, availableExercises] = await Promise.all([
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [workoutsList, availableExercises] = await Promise.all([
     workouts.getWorkouts(),
     exercises.getExercises()
   ]);
 
-  return (
-    <WorkoutsClient workouts={allWorkouts} exercises={availableExercises} />
-  );
+  return <WorkoutsClient exercises={availableExercises} />;
 }
