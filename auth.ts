@@ -3,7 +3,7 @@ import { PrismaAdapter } from '@auth/prisma-adapter';
 import { prisma } from '@/lib/prisma';
 import Google from 'next-auth/providers/google';
 
-const validAdmins = ['tpfitz42@gmail.com'];
+const validAdmins = ['tpfitz42@gmail.com', 'sethkeirn@gmail.com'];
 
 export const {
   handlers: { GET, POST },
